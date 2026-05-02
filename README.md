@@ -1,3 +1,6 @@
+## Struktur Folder
+
+```text
 src/
 ├── auth/
 │   ├── AuthPage.jsx
@@ -31,3 +34,4 @@ src/
 │
 ├── main.jsx
 └── style.css
+```
