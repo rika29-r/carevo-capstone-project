@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
 import AuthPage from "./auth/AuthPage";
+import FormPage from "./form/FormPage";
+import DashboardPage from "./dashboard/DashboardPage";
 
 const instagramIcon =
   "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIj48cGF0aCBzdHJva2UtZGFzaGFycmF5PSI2NiIgZD0iTTE2IDNjMi43NiAwIDUgMi4yNCA1IDV2OGMwIDIuNzYgLTIuMjQgNSAtNSA1aC04Yy0yLjc2IDAgLTUgLTIuMjQgLTUgLTV2LThjMCAtMi43NiAyLjI0IC01IDUgLTVoNFoiPjxhbmltYXRlIGZpbGw9ImZyZWV6ZSIgYXR0cmlidXRlTmFtZT0ic3Ryb2tlLWRhc2hvZmZzZXQiIGR1cj0iMC42cyIgdmFsdWVzPSI2NjswIi8+PC9wYXRoPjxwYXRoIHN0cm9rZS1kYXNoYXJyYXk9IjI4IiBzdHJva2UtZGFzaG9mZnNldD0iMjgiIGQ9Ik0xMiA4YzIuMjEgMCA0IDEuNzkgNCA0YzAgMi4yMSAtMS43OSA0IC00IDRjLTIuMjEgMCAtNCAtMS43OSAtNCAtNGMwIC0yLjIxIDEuNzkgLTQgNCAtNCI+PGFuaW1hdGUgZmlsbD0iZnJlZXplIiBhdHRyaWJ1dGVOYW1lPSJzdHJva2UtZGFzaG9mZnNldCIgYmVnaW49IjAuN3MiIGR1cj0iMC42cyIgdG89IjAiLz48L3BhdGg+PC9nPjxjaXJjbGUgY3g9IjE3IiBjeT0iNyIgcj0iMS41IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwIj48YW5pbWF0ZSBmaWxsPSJmcmVlemUiIGF0dHJpYnV0ZU5hbWU9Im9wYWNpdHkiIGJlZ2luPSIxLjNzIiBkdXI9IjAuMnMiIHRvPSIxIi8+PC9jaXJjbGU+PC9zdmc+";
@@ -30,6 +32,7 @@ function App() {
 
   const [page, setPage] = useState("home");
   const [authMode, setAuthMode] = useState("login");
+  const [dashboardData, setDashboardData] = useState(null);
 
   useEffect(() => {
     document.body.className = theme === "light" ? "theme-light" : "theme-dark";
@@ -100,14 +103,40 @@ function App() {
     }, 50);
   };
 
+  const openFormPage = () => {
+    setPage("form");
+    setActive("form");
+    setIsOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   if (page === "auth") {
     return (
       <AuthPage
         mode={authMode}
         setMode={setAuthMode}
         onBack={backToHome}
+        onAuthSuccess={openFormPage}
       />
     );
+  }
+
+  if (page === "form") {
+    return (
+      <FormPage
+        onLogout={backToHome}
+        onFinish={(data) => {
+          setDashboardData(data);
+          setPage("dashboard");
+          setActive("dashboard");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      />
+    );
+  }
+
+  if (page === "dashboard") {
+    return <DashboardPage formData={dashboardData} onLogout={backToHome} />;
   }
 
   return (
@@ -123,7 +152,7 @@ function App() {
         openRegister={openRegister}
       />
 
-      <Hero />
+      <Hero openRegister={openRegister} />
       <Stats />
       <WhyCarevo />
       <HowItWorks />
@@ -264,7 +293,7 @@ function ThemeToggle({ theme, setTheme }) {
   );
 }
 
-function Hero() {
+function Hero({ openRegister }) {
   return (
     <section id="home" className="hero-section position-relative overflow-hidden">
       <div className="hero-glow hero-glow-left" />
@@ -291,9 +320,14 @@ function Hero() {
             </p>
 
             <div className="d-flex flex-column flex-sm-row align-items-sm-center gap-3 hero-actions mt-4">
-              <button type="button" className="primary-hero-btn">
+              <button
+                type="button"
+                className="primary-hero-btn"
+                onClick={openRegister}
+              >
                 Start Assessment
               </button>
+
               <button type="button" className="secondary-hero-btn">
                 Watch Demo
               </button>
@@ -436,6 +470,7 @@ function WhyCarevo() {
                 <div className={`feature-icon icon-tone-${index} mb-4`}>
                   <img src={icon} alt="" />
                 </div>
+
                 <h3 className="feature-title">{title}</h3>
                 <p className="feature-text mt-3 mb-0">{text}</p>
               </article>
@@ -487,6 +522,7 @@ function HowItWorks() {
             <div className="col-md-6 col-xl-3" key={number}>
               <article className={`step-card h-100 ${index % 2 ? "alt" : ""}`}>
                 <span className="step-number">{number}</span>
+
                 <div className="step-content">
                   <h3 className="step-title">{title}</h3>
                   <p className="step-text mb-0">{text}</p>
@@ -524,6 +560,7 @@ function Footer() {
         <div className="row g-4 align-items-start">
           <div className="col-lg-5">
             <h3 className="footer-brand">CAREVO</h3>
+
             <p className="footer-text mb-0">
               AI-powered platform helping people find the right future career
               path.
@@ -546,6 +583,7 @@ function Footer() {
 
           <div className="col-lg-2">
             <h4 className="footer-title">Contact</h4>
+
             <p className="footer-text mb-0">
               support@carevo.com
               <br />
@@ -562,6 +600,7 @@ function Footer() {
               <img src={instagramIcon} alt="Instagram" />
               <span>in</span>
             </div>
+
             <p className="footer-text mt-4 mb-0">
               © 2025 CAREVO. All rights reserved.
             </p>
@@ -576,6 +615,7 @@ function FooterColumn({ title, items }) {
   return (
     <div>
       <h4 className="footer-title">{title}</h4>
+
       <ul className="list-unstyled footer-text mt-3 mb-0">
         {items.map((item) => (
           <li className="mb-1" key={item}>
