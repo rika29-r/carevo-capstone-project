@@ -1,38 +1,47 @@
 import { useMemo, useState } from "react";
 
 const languageOptions = [
-  { name: "English", flag: "🇬🇧" },
-  { name: "Indonesian", flag: "🇮🇩" },
-  { name: "Mandarin Chinese", flag: "🇨🇳" },
-  { name: "Japanese", flag: "🇯🇵" },
-  { name: "Korean", flag: "🇰🇷" },
-  { name: "Spanish", flag: "🇪🇸" },
-  { name: "French", flag: "🇫🇷" },
-  { name: "Arabic", flag: "🇸🇦" },
-  { name: "German", flag: "🇩🇪" },
-  { name: "Dutch", flag: "🇳🇱" },
-  { name: "Portuguese", flag: "🇵🇹" },
-  { name: "Italian", flag: "🇮🇹" },
-  { name: "Russian", flag: "🇷🇺" },
-  { name: "Thai", flag: "🇹🇭" },
-  { name: "Vietnamese", flag: "🇻🇳" },
-  { name: "Malay", flag: "🇲🇾" },
-  { name: "Hindi", flag: "🇮🇳" },
-  { name: "Turkish", flag: "🇹🇷" },
-  { name: "Filipino", flag: "🇵🇭" },
-  { name: "Bengali", flag: "🇧🇩" },
-  { name: "Urdu", flag: "🇵🇰" },
-  { name: "Persian", flag: "🇮🇷" },
-  { name: "Swahili", flag: "🇹🇿" },
-  { name: "Polish", flag: "🇵🇱" },
-  { name: "Ukrainian", flag: "🇺🇦" },
-  { name: "Greek", flag: "🇬🇷" },
-  { name: "Hebrew", flag: "🇮🇱" },
-  { name: "Czech", flag: "🇨🇿" },
-  { name: "Swedish", flag: "🇸🇪" },
-  { name: "Norwegian", flag: "🇳🇴" },
-  { name: "Danish", flag: "🇩🇰" },
-  { name: "Finnish", flag: "🇫🇮" },
+  { name: "English", countryCode: "us" },
+  { name: "Indonesian", countryCode: "id" },
+  { name: "Mandarin Chinese", countryCode: "cn" },
+  { name: "Japanese", countryCode: "jp" },
+  { name: "Korean", countryCode: "kr" },
+  { name: "Spanish", countryCode: "es" },
+  { name: "French", countryCode: "fr" },
+  { name: "Arabic", countryCode: "sa" },
+  { name: "German", countryCode: "de" },
+  { name: "Dutch", countryCode: "nl" },
+  { name: "Portuguese", countryCode: "pt" },
+  { name: "Italian", countryCode: "it" },
+  { name: "Russian", countryCode: "ru" },
+  { name: "Thai", countryCode: "th" },
+  { name: "Vietnamese", countryCode: "vn" },
+  { name: "Malay", countryCode: "my" },
+  { name: "Hindi", countryCode: "in" },
+  { name: "Turkish", countryCode: "tr" },
+  { name: "Filipino", countryCode: "ph" },
+  { name: "Bengali", countryCode: "bd" },
+  { name: "Urdu", countryCode: "pk" },
+  { name: "Persian", countryCode: "ir" },
+  { name: "Swahili", countryCode: "tz" },
+  { name: "Polish", countryCode: "pl" },
+  { name: "Ukrainian", countryCode: "ua" },
+  { name: "Greek", countryCode: "gr" },
+  { name: "Hebrew", countryCode: "il" },
+  { name: "Czech", countryCode: "cz" },
+  { name: "Swedish", countryCode: "se" },
+  { name: "Norwegian", countryCode: "no" },
+  { name: "Danish", countryCode: "dk" },
+  { name: "Finnish", countryCode: "fi" },
+  { name: "Acehnese", countryCode: "id" },
+  { name: "Balinese", countryCode: "id" },
+  { name: "Banjar", countryCode: "id" },
+  { name: "Batak", countryCode: "id" },
+  { name: "Betawi", countryCode: "id" },
+  { name: "Buginese", countryCode: "id" },
+  { name: "Madurese", countryCode: "id" },
+  { name: "Minangkabau", countryCode: "id" },
+  { name: "Sasak", countryCode: "id" },
 ];
 
 const emptyLanguage = {
@@ -41,6 +50,20 @@ const emptyLanguage = {
   yearStarted: "",
   usageFrequency: "Daily",
 };
+
+function getFlagUrl(languageName) {
+  const selectedLanguage = languageOptions.find(
+    (item) => item.name.toLowerCase() === languageName?.trim().toLowerCase()
+  );
+
+  const countryCode = selectedLanguage?.countryCode;
+
+  if (!countryCode) {
+    return "https://cdn-icons-png.flaticon.com/512/841/841364.png";
+  }
+
+  return `https://flagcdn.com/w80/${countryCode}.png`;
+}
 
 function Icon({ name }) {
   if (name === "plus") {
@@ -180,15 +203,6 @@ function createLanguageList(formData) {
   return [];
 }
 
-function getFlag(languageName) {
-  const normalized = languageName?.trim().toLowerCase();
-
-  return (
-    languageOptions.find((item) => item.name.toLowerCase() === normalized)?.flag ||
-    "🌐"
-  );
-}
-
 function getPercent(proficiency) {
   if (proficiency === "Native Speaker") return 100;
   if (proficiency === "Professional Working") return 90;
@@ -205,16 +219,6 @@ function getProficiencyClass(proficiency) {
   if (proficiency === "Advanced") return "language-advanced";
   if (proficiency === "Intermediate") return "language-intermediate";
   return "language-basic";
-}
-
-function formatDate(date) {
-  if (!date) return "-";
-
-  return new Date(date).toLocaleDateString("id-ID", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
 }
 
 function sortLanguages(list, sortMode) {
@@ -322,7 +326,7 @@ function Language({ formData, setFormData, notify }) {
       setNotice({
         type: "error",
         title: "Data Belum Lengkap",
-        message: "Year started wajib dipilih.",
+        message: "Tahun mulai wajib diisi.",
       });
       return false;
     }
@@ -466,7 +470,13 @@ function Language({ formData, setFormData, notify }) {
 
               <div className="language-custom-select">
                 <div className="language-input-with-flag">
-                  <span>{getFlag(currentLanguage.language)}</span>
+                  <span>
+                    <img
+                      src={getFlagUrl(currentLanguage.language)}
+                      alt={currentLanguage.language || "language flag"}
+                      className="language-flag-img"
+                    />
+                  </span>
 
                   <input
                     type="text"
@@ -499,7 +509,11 @@ function Language({ formData, setFormData, notify }) {
                             setIsDropdownOpen(false);
                           }}
                         >
-                          <span>{language.flag}</span>
+                          <img
+                            src={getFlagUrl(language.name)}
+                            alt={`${language.name} flag`}
+                            className="language-option-flag"
+                          />
                           {language.name}
                         </button>
                       ))
@@ -531,10 +545,12 @@ function Language({ formData, setFormData, notify }) {
             <div className="dash-field">
               <label>Year Started</label>
               <input
-                type="date"
+                type="number"
+                min="1900"
+                max="2100"
+                step="1"
                 value={currentLanguage.yearStarted}
-                onKeyDown={(event) => event.preventDefault()}
-                onClick={(event) => event.currentTarget.showPicker?.()}
+                placeholder="e.g. 2020"
                 onChange={(event) => updateLanguage("yearStarted", event.target.value)}
               />
             </div>
@@ -591,7 +607,11 @@ function Language({ formData, setFormData, notify }) {
             {sortedLanguages.map((item, index) => (
               <div className="language-row" key={`${item.language}-${index}`}>
                 <div className="language-flag">
-                  <span>{getFlag(item.language)}</span>
+                  <img
+                    src={getFlagUrl(item.language)}
+                    alt={`${item.language} flag`}
+                    className="language-flag-img"
+                  />
                 </div>
 
                 <div className="language-info">
@@ -602,7 +622,7 @@ function Language({ formData, setFormData, notify }) {
 
                   <p>
                     Used in {item.usageFrequency?.toLowerCase()} communication.
-                    Started on {formatDate(item.yearStarted)}.
+                    Started in {item.yearStarted || "-"}.
                   </p>
                 </div>
 

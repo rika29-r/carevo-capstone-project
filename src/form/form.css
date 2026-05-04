@@ -650,7 +650,7 @@ textarea {
 }
 
 /* =========================
-   LANGUAGE
+   LANGUAGE FORM
 ========================= */
 
 .language-wrapper {
@@ -732,33 +732,73 @@ textarea {
 }
 
 .searchable-select-box {
-  position: relative;
-}
-
-.searchable-select-box input {
   width: 100%;
-  padding-right: 52px;
+  min-height: 52px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
+  align-items: center;
+  background: var(--input);
+  border: 1px solid var(--input-border);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.searchable-select-box.open input {
+.searchable-select-box.no-flag {
+  grid-template-columns: minmax(0, 1fr) 42px;
+}
+
+.searchable-select-box.open,
+.searchable-select-box:focus-within {
   border-color: var(--blue);
   box-shadow: 0 0 0 3px var(--blue-soft);
 }
 
+.language-flag-preview {
+  width: 42px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-right: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(148, 163, 184, 0.08);
+}
+
+.language-flag-preview img {
+  width: 22px;
+  height: 22px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.searchable-select-box input {
+  width: 100%;
+  height: 52px;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent;
+  color: var(--text);
+  padding: 0 14px;
+  font-size: 15px;
+}
+
+.searchable-select-box.no-flag input {
+  padding-left: 16px;
+}
+
+.searchable-select-box input::placeholder {
+  color: var(--muted);
+}
+
 .searchable-select-toggle {
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
-  width: 28px;
-  height: 28px;
+  width: 42px;
+  height: 52px;
   border: 0;
   background: transparent;
   color: var(--muted);
   display: grid;
   place-items: center;
   cursor: pointer;
-  border-radius: 6px;
 }
 
 .searchable-select-toggle:hover {
@@ -788,19 +828,33 @@ textarea {
   max-height: 240px;
   overflow-y: auto;
   padding: 8px;
+  z-index: 100;
 }
 
 .searchable-option {
   width: 100%;
+  min-height: 42px;
   border: 0;
   background: transparent;
   color: var(--text);
   text-align: left;
-  padding: 12px 14px;
+  padding: 10px 12px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
   line-height: 1.3;
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+}
+
+.language-option-flag {
+  width: 22px;
+  height: 22px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  flex-shrink: 0;
 }
 
 .searchable-option:hover,

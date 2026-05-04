@@ -1,64 +1,69 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-const languageCodes = [
-  "aa", "ab", "af", "ak", "am", "ar", "as", "av", "ay", "az",
-  "ba", "be", "bg", "bh", "bi", "bm", "bn", "bo", "br", "bs",
-  "ca", "ce", "ch", "co", "cr", "cs", "cu", "cv", "cy", "da",
-  "de", "dv", "dz", "ee", "el", "en", "eo", "es", "et", "eu",
-  "fa", "ff", "fi", "fj", "fo", "fr", "fy", "ga", "gd", "gl",
-  "gn", "gu", "gv", "ha", "he", "hi", "ho", "hr", "ht", "hu",
-  "hy", "hz", "ia", "id", "ie", "ig", "ii", "ik", "io", "is",
-  "it", "iu", "ja", "jv", "ka", "kg", "ki", "kj", "kk", "kl",
-  "km", "kn", "ko", "kr", "ks", "ku", "kv", "kw", "ky", "la",
-  "lb", "lg", "li", "ln", "lo", "lt", "lu", "lv", "mg", "mh",
-  "mi", "mk", "ml", "mn", "mr", "ms", "mt", "my", "na", "nb",
-  "nd", "ne", "ng", "nl", "nn", "no", "nr", "nv", "ny", "oc",
-  "oj", "om", "or", "os", "pa", "pi", "pl", "ps", "pt", "qu",
-  "rm", "rn", "ro", "ru", "rw", "sa", "sc", "sd", "se", "sg",
-  "si", "sk", "sl", "sm", "sn", "so", "sq", "sr", "ss", "st",
-  "su", "sv", "sw", "ta", "te", "tg", "th", "ti", "tk", "tl",
-  "tn", "to", "tr", "ts", "tt", "tw", "ty", "ug", "uk", "ur",
-  "uz", "ve", "vi", "vo", "wa", "wo", "xh", "yi", "yo", "za",
-  "zh", "zu",
-];
+const languageFlagMap = {
+  English: "us",
+  Indonesian: "id",
+  Japanese: "jp",
+  Arabic: "sa",
+  Korean: "kr",
+  Chinese: "cn",
+  "Mandarin Chinese": "cn",
+  German: "de",
+  French: "fr",
+  Spanish: "es",
+  Portuguese: "pt",
+  Italian: "it",
+  Dutch: "nl",
+  Russian: "ru",
+  Thai: "th",
+  Vietnamese: "vn",
+  Malay: "my",
+  Hindi: "in",
+  Turkish: "tr",
+  Filipino: "ph",
+  Bengali: "bd",
+  Urdu: "pk",
+  Persian: "ir",
+  Swahili: "tz",
+  Polish: "pl",
+  Ukrainian: "ua",
+  Greek: "gr",
+  Hebrew: "il",
+  Czech: "cz",
+  Swedish: "se",
+  Norwegian: "no",
+  Danish: "dk",
+  Finnish: "fi",
+  Acehnese: "id",
+  Balinese: "id",
+  Banjar: "id",
+  Batak: "id",
+  Betawi: "id",
+  Buginese: "id",
+  Madurese: "id",
+  Minangkabau: "id",
+  Sasak: "id",
+};
 
-const extraLanguages = [
-  "Acehnese",
-  "Acholi",
-  "Adangme",
-  "Adyghe",
-  "Balinese",
-  "Banjar",
-  "Batak",
-  "Betawi",
-  "Buginese",
-  "Madurese",
-  "Minangkabau",
-  "Sasak",
-  "Tetum",
-];
-
-const languageNameFormatter =
-  typeof Intl !== "undefined" && Intl.DisplayNames
-    ? new Intl.DisplayNames(["en"], { type: "language" })
-    : null;
-
-const languagesList = [
-  ...languageCodes.map((code) => ({
-    code,
-    name: languageNameFormatter?.of(code) || code.toUpperCase(),
-  })),
-  ...extraLanguages.map((name) => ({
+const languagesList = Object.entries(languageFlagMap)
+  .map(([name, countryCode]) => ({
     code: name.toLowerCase().replace(/\s+/g, "-"),
     name,
-  })),
-]
-  .filter((language) => language.name && language.name !== language.code)
-  .filter(
-    (language, index, self) =>
-      index === self.findIndex((item) => item.name === language.name)
-  )
+    countryCode,
+  }))
   .sort((a, b) => a.name.localeCompare(b.name));
+
+function getFlagUrl(languageName) {
+  const selectedLanguage = languagesList.find(
+    (item) => item.name.toLowerCase() === languageName?.trim().toLowerCase()
+  );
+
+  if (!selectedLanguage?.countryCode) {
+    return "";
+  }
+
+  return `https://flagcdn.com/w80/${selectedLanguage.countryCode.toLowerCase()}.png`;
+}
 
 function SearchableLanguageSelect({ value, onChange }) {
   const wrapperRef = useRef(null);
@@ -79,17 +84,18 @@ function SearchableLanguageSelect({ value, onChange }) {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const filteredLanguages = useMemo(() => {
     const keyword = query.trim().toLowerCase();
 
-    if (!keyword) return languagesList.slice(0, 80);
+    if (!keyword) return languagesList;
 
-    return languagesList
-      .filter((item) => item.name.toLowerCase().includes(keyword))
-      .slice(0, 80);
+    return languagesList.filter((item) =>
+      item.name.toLowerCase().includes(keyword)
+    );
   }, [query]);
 
   useEffect(() => {
@@ -104,6 +110,7 @@ function SearchableLanguageSelect({ value, onChange }) {
 
   const handleInputChange = (event) => {
     const newValue = event.target.value;
+
     setQuery(newValue);
     onChange(newValue);
     setIsOpen(true);
@@ -131,7 +138,9 @@ function SearchableLanguageSelect({ value, onChange }) {
 
     if (event.key === "Enter") {
       event.preventDefault();
+
       const selected = filteredLanguages[highlightedIndex];
+
       if (selected) selectLanguage(selected.name);
     }
 
@@ -140,9 +149,24 @@ function SearchableLanguageSelect({ value, onChange }) {
     }
   };
 
+  const selectedFlag = getFlagUrl(query);
+
   return (
     <div className="searchable-select" ref={wrapperRef}>
-      <div className={`searchable-select-box ${isOpen ? "open" : ""}`}>
+      <div
+        className={`searchable-select-box ${isOpen ? "open" : ""} ${
+          selectedFlag ? "" : "no-flag"
+        }`}
+      >
+        {selectedFlag && (
+          <div className="language-flag-preview">
+            <img
+              src={selectedFlag}
+              alt={query ? `${query} flag` : "language flag"}
+            />
+          </div>
+        )}
+
         <input
           ref={inputRef}
           type="text"
@@ -172,19 +196,31 @@ function SearchableLanguageSelect({ value, onChange }) {
       {isOpen && (
         <div className="searchable-dropdown">
           {filteredLanguages.length > 0 ? (
-            filteredLanguages.map((item, index) => (
-              <button
-                key={item.code}
-                type="button"
-                className={`searchable-option ${
-                  index === highlightedIndex ? "active" : ""
-                } ${value === item.name ? "selected" : ""}`}
-                onMouseEnter={() => setHighlightedIndex(index)}
-                onClick={() => selectLanguage(item.name)}
-              >
-                {item.name}
-              </button>
-            ))
+            filteredLanguages.map((item, index) => {
+              const flagUrl = getFlagUrl(item.name);
+
+              return (
+                <button
+                  key={item.code}
+                  type="button"
+                  className={`searchable-option ${
+                    index === highlightedIndex ? "active" : ""
+                  } ${value === item.name ? "selected" : ""}`}
+                  onMouseEnter={() => setHighlightedIndex(index)}
+                  onClick={() => selectLanguage(item.name)}
+                >
+                  {flagUrl && (
+                    <img
+                      src={flagUrl}
+                      alt={`${item.name} flag`}
+                      className="language-option-flag"
+                    />
+                  )}
+
+                  <span>{item.name}</span>
+                </button>
+              );
+            })
           ) : (
             <div className="searchable-empty">Language not found.</div>
           )}
@@ -217,10 +253,6 @@ function LanguageForm({ formData, setFormData, onNext, onPrevious }) {
   ];
 
   const usageOptions = ["Daily", "Weekly", "Monthly", "Recently"];
-
-  const openDatePicker = (event) => {
-    event.currentTarget.showPicker?.();
-  };
 
   return (
     <div className="language-wrapper">
@@ -264,12 +296,14 @@ function LanguageForm({ formData, setFormData, onNext, onPrevious }) {
 
           <div className="field-group">
             <label>Year Started</label>
+
             <input
-              type="date"
+              type="number"
+              min="1900"
+              max="2100"
+              step="1"
               value={languages.yearStarted}
-              onClick={openDatePicker}
-              onFocus={openDatePicker}
-              onKeyDown={(event) => event.preventDefault()}
+              placeholder="e.g. 2020"
               onChange={(event) =>
                 updateLanguage("yearStarted", event.target.value)
               }

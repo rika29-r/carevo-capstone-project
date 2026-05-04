@@ -2559,3 +2559,28 @@
     box-shadow: none;
   }
 }
+
+.language-flag-img,
+.language-option-flag {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.language-input-with-flag > span {
+  display: grid;
+  place-items: center;
+}
+
+.language-custom-menu button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.language-flag {
+  display: grid;
+  place-items: center;
+}
