@@ -1,58 +1,79 @@
-import { useState } from "react";
-import "./form.css";
+import { useState } from 'react';
+import './form.css';
 
-import ExperienceForm from "./steps/ExperienceForm";
-import ProjectForm from "./steps/ProjectForm";
-import LanguageForm from "./steps/LanguageForm";
-
+import ExperienceForm from './steps/ExperienceForm';
+import ProjectForm from './steps/ProjectForm';
+import LanguageForm from './steps/LanguageForm';
+import ProfileInfoForm from './steps/ProfileInfoForm';
+import EducationForm from './steps/EducationForm';
+import SkillForm from './steps/SkillForm';
 const steps = [
-  { id: "personalInfo", label: "Personal Info", icon: "user" },
-  { id: "experience", label: "Experience", icon: "briefcase" },
-  { id: "education", label: "Education", icon: "education" },
-  { id: "skills", label: "Skills", icon: "skill" },
-  { id: "projects", label: "Projects", icon: "folder" },
-  { id: "certifications", label: "Certifications", icon: "shield" },
-  { id: "languages", label: "Languages", icon: "language" },
+  { id: 'personalInfo', label: 'Personal Info', icon: 'user' },
+  { id: 'experience', label: 'Experience', icon: 'briefcase' },
+  { id: 'education', label: 'Education', icon: 'education' },
+  { id: 'skills', label: 'Skills', icon: 'skill' },
+  { id: 'projects', label: 'Projects', icon: 'folder' },
+  { id: 'certifications', label: 'Certifications', icon: 'shield' },
+  { id: 'languages', label: 'Languages', icon: 'language' },
 ];
 
 const initialFormData = {
-  experience: {
-    jobTitle: "",
-    companyName: "",
-    employmentType: "Full-time",
-    location: "",
-    startDate: "",
-    endDate: "",
-    currentlyWork: false,
-    description: "",
-    skillsUsed: [],
-    skillInput: "",
+  personalInfo: {
+    profileImage: null,
+    fullName: '',
+    professionalTitle: '',
+    location: '',
+    shortBio: '',
   },
+
+  experience: {
+    jobTitle: '',
+    companyName: '',
+    employmentType: 'Full-time',
+    location: '',
+    startDate: '',
+    endDate: '',
+    currentlyWork: false,
+    description: '',
+    skillsUsed: [],
+    skillInput: '',
+  },
+  education: {
+    institutionName: '',
+    degreeMajor: '',
+    startDate: '',
+    endDate: '',
+    currentlyStudy: false,
+    location: '',
+    gpa: '',
+    description: '',
+  },
+
   projects: {
-    thumbnail: "",
-    thumbnailName: "",
-    template: "Web App",
-    title: "",
-    status: "In Progress",
-    role: "",
-    startDate: "",
-    endDate: "",
-    demoUrl: "",
-    githubUrl: "",
+    thumbnail: '',
+    thumbnailName: '',
+    template: 'Web App',
+    title: '',
+    status: 'In Progress',
+    role: '',
+    startDate: '',
+    endDate: '',
+    demoUrl: '',
+    githubUrl: '',
     featured: true,
     techStack: [],
-    techInput: "",
+    techInput: '',
   },
   languages: {
-    language: "",
-    proficiency: "Professional Working",
-    yearStarted: "",
-    usageFrequency: "Daily",
+    language: '',
+    proficiency: 'Professional Working',
+    yearStarted: '',
+    usageFrequency: 'Daily',
   },
 };
 
 function Icon({ name }) {
-  if (name === "user") {
+  if (name === 'user') {
     return (
       <svg viewBox="0 0 24 24">
         <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
@@ -61,7 +82,7 @@ function Icon({ name }) {
     );
   }
 
-  if (name === "briefcase") {
+  if (name === 'briefcase') {
     return (
       <svg viewBox="0 0 24 24">
         <path d="M9 7V5.8C9 4.8 9.8 4 10.8 4h2.4c1 0 1.8.8 1.8 1.8V7" />
@@ -71,7 +92,7 @@ function Icon({ name }) {
     );
   }
 
-  if (name === "education") {
+  if (name === 'education') {
     return (
       <svg viewBox="0 0 24 24">
         <path d="M3 8.5 12 4l9 4.5-9 4.5-9-4.5Z" />
@@ -80,7 +101,7 @@ function Icon({ name }) {
     );
   }
 
-  if (name === "skill") {
+  if (name === 'skill') {
     return (
       <svg viewBox="0 0 24 24">
         <path d="M12 3 14.2 8.4 20 9l-4.4 3.7 1.3 5.7L12 15.3 7.1 18.4l1.3-5.7L4 9l5.8-.6L12 3Z" />
@@ -88,7 +109,7 @@ function Icon({ name }) {
     );
   }
 
-  if (name === "folder") {
+  if (name === 'folder') {
     return (
       <svg viewBox="0 0 24 24">
         <path d="M3.5 6.5h6l2 2h9v9.5h-17V6.5Z" />
@@ -96,7 +117,7 @@ function Icon({ name }) {
     );
   }
 
-  if (name === "shield") {
+  if (name === 'shield') {
     return (
       <svg viewBox="0 0 24 24">
         <path d="M12 3.5 18.5 6v5.4c0 4-2.6 7.5-6.5 8.8-3.9-1.3-6.5-4.8-6.5-8.8V6L12 3.5Z" />
@@ -105,7 +126,7 @@ function Icon({ name }) {
     );
   }
 
-  if (name === "language") {
+  if (name === 'language') {
     return (
       <svg viewBox="0 0 24 24">
         <path d="M4 5h10" />
@@ -117,7 +138,7 @@ function Icon({ name }) {
     );
   }
 
-  if (name === "logout") {
+  if (name === 'logout') {
     return (
       <svg viewBox="0 0 24 24">
         <path d="M10 5H5v14h5" />
@@ -127,7 +148,7 @@ function Icon({ name }) {
     );
   }
 
-  if (name === "menu") {
+  if (name === 'menu') {
     return (
       <svg viewBox="0 0 24 24">
         <path d="M4 7h16" />
@@ -137,7 +158,7 @@ function Icon({ name }) {
     );
   }
 
-  if (name === "refresh") {
+  if (name === 'refresh') {
     return (
       <svg viewBox="0 0 24 24">
         <path d="M20 11a8 8 0 0 0-14.6-4.5L4 8" />
@@ -148,7 +169,7 @@ function Icon({ name }) {
     );
   }
 
-  if (name === "bell") {
+  if (name === 'bell') {
     return (
       <svg viewBox="0 0 24 24">
         <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
@@ -157,7 +178,7 @@ function Icon({ name }) {
     );
   }
 
-  if (name === "trash") {
+  if (name === 'trash') {
     return (
       <svg viewBox="0 0 24 24">
         <path d="M4 7h16" />
@@ -178,7 +199,7 @@ function Notice({ notice, onClose }) {
   return (
     <div className="custom-notice-layer">
       <div className={`custom-notice custom-notice-${notice.type}`}>
-        <div className="notice-icon">{notice.type === "success" ? "✓" : "!"}</div>
+        <div className="notice-icon">{notice.type === 'success' ? '✓' : '!'}</div>
 
         <div className="notice-content">
           <h3>{notice.title}</h3>
@@ -194,7 +215,7 @@ function Notice({ notice, onClose }) {
 }
 
 function FormPage({ onLogout, onFinish }) {
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState(initialFormData);
   const [darkMode, setDarkMode] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -203,12 +224,12 @@ function FormPage({ onLogout, onFinish }) {
   const [notifications, setNotifications] = useState([
     {
       id: Date.now(),
-      type: "info",
-      title: "Form CAREVO Dibuka",
-      message: "Mulai lengkapi data kamu dari step Experience.",
-      time: new Date().toLocaleTimeString("id-ID", {
-        hour: "2-digit",
-        minute: "2-digit",
+      type: 'info',
+      title: 'Form CAREVO Dibuka',
+      message: 'Mulai lengkapi data kamu dari step Experience.',
+      time: new Date().toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit',
       }),
       read: false,
     },
@@ -225,9 +246,9 @@ function FormPage({ onLogout, onFinish }) {
       type,
       title,
       message,
-      time: new Date().toLocaleTimeString("id-ID", {
-        hour: "2-digit",
-        minute: "2-digit",
+      time: new Date().toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit',
       }),
       read: false,
     };
@@ -247,7 +268,7 @@ function FormPage({ onLogout, onFinish }) {
       prev.map((item) => ({
         ...item,
         read: true,
-      }))
+      })),
     );
   };
 
@@ -255,37 +276,61 @@ function FormPage({ onLogout, onFinish }) {
     setNotifications([]);
     setNotificationOpen(false);
   };
+  const validatePersonalInfo = () => {
+    const data = formData.personalInfo;
 
-  const validateExperience = () => {
-    const data = formData.experience;
-
-    if (!data.jobTitle.trim()) {
-      showNotice("error", "Data Belum Lengkap", "Job Title wajib diisi.");
+    if (!data.fullName.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Full Name wajib diisi.');
       return false;
     }
 
-    if (!data.companyName.trim()) {
-      showNotice("error", "Data Belum Lengkap", "Company Name wajib diisi.");
+    if (!data.professionalTitle.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Professional Title wajib diisi.');
       return false;
     }
 
     if (!data.location.trim()) {
-      showNotice("error", "Data Belum Lengkap", "Location wajib diisi.");
+      showNotice('error', 'Data Belum Lengkap', 'Location wajib diisi.');
+      return false;
+    }
+
+    if (!data.shortBio.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Short Bio wajib diisi.');
+      return false;
+    }
+
+    return true;
+  };
+  const validateExperience = () => {
+    const data = formData.experience;
+
+    if (!data.jobTitle.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Job Title wajib diisi.');
+      return false;
+    }
+
+    if (!data.companyName.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Company Name wajib diisi.');
+      return false;
+    }
+
+    if (!data.location.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Location wajib diisi.');
       return false;
     }
 
     if (!data.startDate) {
-      showNotice("error", "Data Belum Lengkap", "Start Date wajib dipilih.");
+      showNotice('error', 'Data Belum Lengkap', 'Start Date wajib dipilih.');
       return false;
     }
 
     if (!data.currentlyWork && !data.endDate) {
-      showNotice("error", "Data Belum Lengkap", "End Date wajib dipilih.");
+      showNotice('error', 'Data Belum Lengkap', 'End Date wajib dipilih.');
       return false;
     }
 
     if (!data.description.trim()) {
-      showNotice("error", "Data Belum Lengkap", "Description wajib diisi.");
+      showNotice('error', 'Data Belum Lengkap', 'Description wajib diisi.');
       return false;
     }
 
@@ -296,37 +341,37 @@ function FormPage({ onLogout, onFinish }) {
     const data = formData.projects;
 
     if (!data.thumbnail) {
-      showNotice("error", "Data Belum Lengkap", "Project thumbnail wajib diupload.");
+      showNotice('error', 'Data Belum Lengkap', 'Project thumbnail wajib diupload.');
       return false;
     }
 
     if (!data.title.trim()) {
-      showNotice("error", "Data Belum Lengkap", "Project Title wajib diisi.");
+      showNotice('error', 'Data Belum Lengkap', 'Project Title wajib diisi.');
       return false;
     }
 
     if (!data.role.trim()) {
-      showNotice("error", "Data Belum Lengkap", "Team / Role wajib diisi.");
+      showNotice('error', 'Data Belum Lengkap', 'Team / Role wajib diisi.');
       return false;
     }
 
     if (!data.startDate) {
-      showNotice("error", "Data Belum Lengkap", "Start Date project wajib dipilih.");
+      showNotice('error', 'Data Belum Lengkap', 'Start Date project wajib dipilih.');
       return false;
     }
 
     if (!data.endDate) {
-      showNotice("error", "Data Belum Lengkap", "End Date project wajib dipilih.");
+      showNotice('error', 'Data Belum Lengkap', 'End Date project wajib dipilih.');
       return false;
     }
 
     if (!data.demoUrl.trim()) {
-      showNotice("error", "Data Belum Lengkap", "Demo URL wajib diisi.");
+      showNotice('error', 'Data Belum Lengkap', 'Demo URL wajib diisi.');
       return false;
     }
 
     if (!data.githubUrl.trim()) {
-      showNotice("error", "Data Belum Lengkap", "Github Repository wajib diisi.");
+      showNotice('error', 'Data Belum Lengkap', 'Github Repository wajib diisi.');
       return false;
     }
 
@@ -337,12 +382,53 @@ function FormPage({ onLogout, onFinish }) {
     const data = formData.languages;
 
     if (!data.language.trim()) {
-      showNotice("error", "Data Belum Lengkap", "Language wajib diisi.");
+      showNotice('error', 'Data Belum Lengkap', 'Language wajib diisi.');
       return false;
     }
 
     if (!data.yearStarted) {
-      showNotice("error", "Data Belum Lengkap", "Year Started wajib dipilih.");
+      showNotice('error', 'Data Belum Lengkap', 'Year Started wajib dipilih.');
+      return false;
+    }
+
+    return true;
+  };
+
+  const validateEducation = () => {
+    const data = formData.education;
+
+    if (!data.institutionName?.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Institution Name wajib diisi.');
+      return false;
+    }
+
+    if (!data.degreeMajor?.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Degree / Major wajib diisi.');
+      return false;
+    }
+
+    if (!data.startDate) {
+      showNotice('error', 'Data Belum Lengkap', 'Start Date wajib dipilih.');
+      return false;
+    }
+
+    if (!data.currentlyStudy && !data.endDate) {
+      showNotice('error', 'Data Belum Lengkap', 'End Date wajib dipilih.');
+      return false;
+    }
+
+    if (!data.location?.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Location wajib diisi.');
+      return false;
+    }
+
+    if (!data.gpa?.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'GPA / Grade wajib diisi.');
+      return false;
+    }
+
+    if (!data.description?.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Description wajib diisi.');
       return false;
     }
 
@@ -350,9 +436,11 @@ function FormPage({ onLogout, onFinish }) {
   };
 
   const validateCurrentStep = () => {
-    if (currentStep.id === "experience") return validateExperience();
-    if (currentStep.id === "projects") return validateProject();
-    if (currentStep.id === "languages") return validateLanguage();
+    if (currentStep.id === 'personalInfo') return validatePersonalInfo();
+    if (currentStep.id === 'experience') return validateExperience();
+    if (currentStep.id === 'education') return validateEducation();
+    if (currentStep.id === 'projects') return validateProject();
+    if (currentStep.id === 'languages') return validateLanguage();
 
     return true;
   };
@@ -360,31 +448,19 @@ function FormPage({ onLogout, onFinish }) {
   const handleNext = () => {
     if (!validateCurrentStep()) return;
 
-    if (
-      currentStep.id === "experience" ||
-      currentStep.id === "projects" ||
-      currentStep.id === "languages"
-    ) {
-      addNotification(
-        "success",
-        `${currentStep.label} Tersimpan`,
-        `Data ${currentStep.label} berhasil diisi dan disimpan sementara.`
-      );
+    if (currentStep.id === 'experience' || currentStep.id === 'projects' || currentStep.id === 'languages') {
+      addNotification('success', `${currentStep.label} Tersimpan`, `Data ${currentStep.label} berhasil diisi dan disimpan sementara.`);
     }
 
     if (activeStep < steps.length - 1) {
       setActiveStep(activeStep + 1);
       setSidebarOpen(false);
       setNotificationOpen(false);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
-    showNotice(
-      "success",
-      "Form Selesai",
-      "Data berhasil disimpan dan siap dipakai untuk generate CV."
-    );
+    showNotice('success', 'Form Selesai', 'Data berhasil disimpan dan siap dipakai untuk generate CV.');
 
     onFinish?.(formData);
   };
@@ -394,7 +470,7 @@ function FormPage({ onLogout, onFinish }) {
       setActiveStep(activeStep - 1);
       setSidebarOpen(false);
       setNotificationOpen(false);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -402,17 +478,13 @@ function FormPage({ onLogout, onFinish }) {
     setActiveStep(index);
     setSidebarOpen(false);
     setNotificationOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleRefresh = () => {
-    addNotification(
-      "info",
-      "Halaman Disegarkan",
-      `Kamu masih berada di step ${currentStep.label}.`
-    );
+    addNotification('info', 'Halaman Disegarkan', `Kamu masih berada di step ${currentStep.label}.`);
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleLogout = () => {
@@ -423,56 +495,51 @@ function FormPage({ onLogout, onFinish }) {
     setNotificationOpen(false);
     onLogout?.();
   };
-
   const renderStepContent = () => {
-    if (currentStep.id === "experience") {
+    if (currentStep.id === 'experience') {
+      return <ExperienceForm formData={formData} setFormData={setFormData} onNext={handleNext} onPrevious={handlePrevious} />;
+    }
+
+    if (currentStep.id === 'projects') {
+      return <ProjectForm formData={formData} setFormData={setFormData} onNext={handleNext} onPrevious={handlePrevious} />;
+    }
+
+    if (currentStep.id === 'languages') {
+      return <LanguageForm formData={formData} setFormData={setFormData} onNext={handleNext} onPrevious={handlePrevious} />;
+    }
+
+    if (currentStep.id === 'personalInfo') {
       return (
-        <ExperienceForm
+        <ProfileInfoForm
           formData={formData}
           setFormData={setFormData}
+          profileImage={formData.personalInfo.profileImage}
+          setProfileImage={(image) =>
+            setFormData((prev) => ({
+              ...prev,
+              personalInfo: {
+                ...prev.personalInfo,
+                profileImage: image,
+              },
+            }))
+          }
           onNext={handleNext}
           onPrevious={handlePrevious}
         />
       );
     }
 
-    if (currentStep.id === "projects") {
-      return (
-        <ProjectForm
-          formData={formData}
-          setFormData={setFormData}
-          onNext={handleNext}
-          onPrevious={handlePrevious}
-        />
-      );
-    }
-
-    if (currentStep.id === "languages") {
-      return (
-        <LanguageForm
-          formData={formData}
-          setFormData={setFormData}
-          onNext={handleNext}
-          onPrevious={handlePrevious}
-        />
-      );
+    if (currentStep.id === 'education') {
+      return <EducationForm formData={formData} setFormData={setFormData} onNext={handleNext} onPrevious={handlePrevious} />;
     }
 
     return (
       <div className="form-card empty-step-card">
         <h2>{currentStep.label}</h2>
-        <p>
-          Bagian ini dibuat oleh anggota tim lain. Untuk sementara, kamu bisa
-          lanjut ke step berikutnya.
-        </p>
+        <p>Bagian ini dibuat oleh anggota tim lain. Untuk sementara, kamu bisa lanjut ke step berikutnya.</p>
 
         <div className="form-bottom-actions">
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={handlePrevious}
-            disabled={activeStep === 0}
-          >
+          <button type="button" className="btn-secondary" onClick={handlePrevious} disabled={activeStep === 0}>
             Previous
           </button>
 
@@ -483,40 +550,26 @@ function FormPage({ onLogout, onFinish }) {
       </div>
     );
   };
+  if (currentStep.id === 'skills') {
+    return <SkillForm onNext={handleNext} onPrevious={handlePrevious} />;
+  }
 
   return (
-    <div className={`carevo-form ${darkMode ? "dark" : "light"}`}>
+    <div className={`carevo-form ${darkMode ? 'dark' : 'light'}`}>
       <Notice notice={notice} onClose={() => setNotice(null)} />
 
-      <button
-        className={`mobile-menu-btn ${sidebarOpen ? "hide-mobile-menu-btn" : ""}`}
-        type="button"
-        onClick={() => setSidebarOpen(true)}
-        aria-label="Open menu"
-      >
+      <button className={`mobile-menu-btn ${sidebarOpen ? 'hide-mobile-menu-btn' : ''}`} type="button" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
         <Icon name="menu" />
       </button>
 
-      {sidebarOpen && (
-        <button
-          className="sidebar-overlay"
-          type="button"
-          onClick={() => setSidebarOpen(false)}
-          aria-label="Close sidebar"
-        />
-      )}
+      {sidebarOpen && <button className="sidebar-overlay" type="button" onClick={() => setSidebarOpen(false)} aria-label="Close sidebar" />}
 
-      <aside className={`form-sidebar ${sidebarOpen ? "show" : ""}`}>
+      <aside className={`form-sidebar ${sidebarOpen ? 'show' : ''}`}>
         <div className="brand">CAREVO</div>
 
         <nav className="side-nav">
           {steps.map((step, index) => (
-            <button
-              key={step.id}
-              type="button"
-              className={`side-link ${activeStep === index ? "active" : ""}`}
-              onClick={() => goToStep(index)}
-            >
+            <button key={step.id} type="button" className={`side-link ${activeStep === index ? 'active' : ''}`} onClick={() => goToStep(index)}>
               <span className="side-icon">
                 <Icon name={step.icon} />
               </span>
@@ -529,12 +582,7 @@ function FormPage({ onLogout, onFinish }) {
           <div className="dark-toggle-row">
             <span>Dark Mode</span>
 
-            <button
-              type="button"
-              className={`toggle ${darkMode ? "active" : ""}`}
-              onClick={() => setDarkMode(!darkMode)}
-              aria-label="Toggle dark mode"
-            >
+            <button type="button" className={`toggle ${darkMode ? 'active' : ''}`} onClick={() => setDarkMode(!darkMode)} aria-label="Toggle dark mode">
               <span />
             </button>
           </div>
@@ -551,31 +599,15 @@ function FormPage({ onLogout, onFinish }) {
           <div />
 
           <div className="topbar-icons">
-            <button
-              type="button"
-              className="topbar-icon-btn"
-              aria-label="Refresh"
-              onClick={handleRefresh}
-            >
+            <button type="button" className="topbar-icon-btn" aria-label="Refresh" onClick={handleRefresh}>
               <Icon name="refresh" />
             </button>
 
             <div className="notification-wrap">
-              <button
-                type="button"
-                className={`topbar-icon-btn notification-btn ${
-                  notificationOpen ? "active" : ""
-                }`}
-                aria-label="Notification"
-                onClick={openNotificationPanel}
-              >
+              <button type="button" className={`topbar-icon-btn notification-btn ${notificationOpen ? 'active' : ''}`} aria-label="Notification" onClick={openNotificationPanel}>
                 <Icon name="bell" />
 
-                {unreadCount > 0 && (
-                  <span className="notification-badge">
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
-                )}
+                {unreadCount > 0 && <span className="notification-badge">{unreadCount > 9 ? '9+' : unreadCount}</span>}
               </button>
 
               {notificationOpen && (
@@ -587,12 +619,7 @@ function FormPage({ onLogout, onFinish }) {
                     </div>
 
                     {notifications.length > 0 && (
-                      <button
-                        type="button"
-                        className="clear-notification-btn"
-                        onClick={clearNotifications}
-                        aria-label="Clear notifications"
-                      >
+                      <button type="button" className="clear-notification-btn" onClick={clearNotifications} aria-label="Clear notifications">
                         <Icon name="trash" />
                       </button>
                     )}
@@ -601,10 +628,7 @@ function FormPage({ onLogout, onFinish }) {
                   <div className="notification-list">
                     {notifications.length > 0 ? (
                       notifications.map((item) => (
-                        <div
-                          className={`notification-item notification-${item.type}`}
-                          key={item.id}
-                        >
+                        <div className={`notification-item notification-${item.type}`} key={item.id}>
                           <span className="notification-dot" />
 
                           <div className="notification-text">
@@ -634,28 +658,18 @@ function FormPage({ onLogout, onFinish }) {
           <div className="page-heading">
             <div>
               <h1>{currentStep.label} Information</h1>
-              <p>
-                Lengkapi data kamu step by step untuk membantu proses pembuatan CV.
-              </p>
+              <p>Lengkapi data kamu step by step untuk membantu proses pembuatan CV.</p>
             </div>
           </div>
 
           <div className="step-progress">
             {steps.map((step, index) => (
               <div className="step-item" key={step.id}>
-                <button
-                  type="button"
-                  className={`step-circle ${index < activeStep ? "done" : ""} ${
-                    index === activeStep ? "active" : ""
-                  }`}
-                  onClick={() => goToStep(index)}
-                >
-                  {index < activeStep ? "✓" : index + 1}
+                <button type="button" className={`step-circle ${index < activeStep ? 'done' : ''} ${index === activeStep ? 'active' : ''}`} onClick={() => goToStep(index)}>
+                  {index < activeStep ? '✓' : index + 1}
                 </button>
 
-                <span className={`step-label ${index <= activeStep ? "active" : ""}`}>
-                  {step.label}
-                </span>
+                <span className={`step-label ${index <= activeStep ? 'active' : ''}`}>{step.label}</span>
 
                 {index !== steps.length - 1 && <span className="step-line" />}
               </div>
