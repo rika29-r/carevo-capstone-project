@@ -7,6 +7,7 @@ import LanguageForm from './steps/LanguageForm';
 import ProfileInfoForm from './steps/ProfileInfoForm';
 import EducationForm from './steps/EducationForm';
 import SkillForm from './steps/SkillForm';
+import CertificationForm from './steps/CertificationForm';
 const steps = [
   { id: 'personalInfo', label: 'Personal Info', icon: 'user' },
   { id: 'experience', label: 'Experience', icon: 'briefcase' },
@@ -48,7 +49,9 @@ const initialFormData = {
     gpa: '',
     description: '',
   },
-
+  skills: {
+    selectedSkills: [],
+  },
   projects: {
     thumbnail: '',
     thumbnailName: '',
@@ -69,6 +72,12 @@ const initialFormData = {
     proficiency: 'Professional Working',
     yearStarted: '',
     usageFrequency: 'Daily',
+  },
+  certifications: {
+    certificateName: '',
+    issuer: '',
+    issueDate: '',
+    credentialId: '',
   },
 };
 
@@ -434,14 +443,51 @@ function FormPage({ onLogout, onFinish }) {
 
     return true;
   };
+  const validateSkills = () => {
+    const data = formData.skills;
+
+    if (!data.selectedSkills || data.selectedSkills.length === 0) {
+      showNotice('error', 'Data Belum Lengkap', 'Pilih minimal 1 skill.');
+      return false;
+    }
+
+    return true;
+  };
+
+  const validateCertification = () => {
+    const data = formData.certifications;
+
+    if (!data.certificateName?.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Certificate Name wajib diisi.');
+      return false;
+    }
+
+    if (!data.issuer?.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Issuer wajib diisi.');
+      return false;
+    }
+
+    if (!data.issueDate) {
+      showNotice('error', 'Data Belum Lengkap', 'Issue Date wajib dipilih.');
+      return false;
+    }
+
+    if (!data.credentialId?.trim()) {
+      showNotice('error', 'Data Belum Lengkap', 'Credential ID wajib diisi.');
+      return false;
+    }
+
+    return true;
+  };
 
   const validateCurrentStep = () => {
     if (currentStep.id === 'personalInfo') return validatePersonalInfo();
     if (currentStep.id === 'experience') return validateExperience();
     if (currentStep.id === 'education') return validateEducation();
+    if (currentStep.id === 'skills') return validateSkills();
     if (currentStep.id === 'projects') return validateProject();
     if (currentStep.id === 'languages') return validateLanguage();
-
+    if (currentStep.id === 'certifications') return validateCertification();
     return true;
   };
 
@@ -532,7 +578,12 @@ function FormPage({ onLogout, onFinish }) {
     if (currentStep.id === 'education') {
       return <EducationForm formData={formData} setFormData={setFormData} onNext={handleNext} onPrevious={handlePrevious} />;
     }
-
+    if (currentStep.id === 'skills') {
+      return <SkillForm formData={formData} setFormData={setFormData} onNext={handleNext} onPrevious={handlePrevious} />;
+    }
+    if (currentStep.id === 'certifications') {
+      return <CertificationForm formData={formData} setFormData={setFormData} onNext={handleNext} onPrevious={handlePrevious} />;
+    }
     return (
       <div className="form-card empty-step-card">
         <h2>{currentStep.label}</h2>
@@ -542,7 +593,6 @@ function FormPage({ onLogout, onFinish }) {
           <button type="button" className="btn-secondary" onClick={handlePrevious} disabled={activeStep === 0}>
             Previous
           </button>
-
           <button type="button" className="btn-primary" onClick={handleNext}>
             Next Step
           </button>
@@ -550,9 +600,6 @@ function FormPage({ onLogout, onFinish }) {
       </div>
     );
   };
-  if (currentStep.id === 'skills') {
-    return <SkillForm onNext={handleNext} onPrevious={handlePrevious} />;
-  }
 
   return (
     <div className={`carevo-form ${darkMode ? 'dark' : 'light'}`}>
