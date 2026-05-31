@@ -1,0 +1,4374 @@
+* {
+  box-sizing: border-box;
+}
+
+.carevo-form {
+  --blue: #3b82f6;
+  --blue-strong: #2563eb;
+  --blue-dark: #1d4ed8;
+  --blue-soft: rgba(59, 130, 246, 0.16);
+
+  --green: #22c55e;
+  --green-strong: #16a34a;
+  --green-soft: rgba(34, 197, 94, 0.16);
+
+  --red: #ef4444;
+  --red-soft: rgba(239, 68, 68, 0.16);
+
+  --orange: #f59e0b;
+  --orange-soft: rgba(245, 158, 11, 0.18);
+
+  --purple: #8b5cf6;
+  --purple-soft: rgba(139, 92, 246, 0.18);
+
+  --radius: 14px;
+
+  min-height: 100vh;
+  display: flex;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+.carevo-form.dark {
+  --bg: #0b0f16;
+  --sidebar: #111827;
+  --panel: #121a29;
+  --panel-2: #0d131d;
+  --border: #223047;
+  --text: #f1f5f9;
+  --muted: #9ca3af;
+  --input: #080d14;
+  --input-border: #253149;
+  --sidebar-text: #a8b3c7;
+  --sidebar-icon: #94a3b8;
+  --sidebar-title: #c7d2fe;
+  --active-bg: rgba(59, 130, 246, 0.16);
+  --active-text: #60a5fa;
+}
+
+.carevo-form.light {
+  --bg: #f4f7fb;
+  --sidebar: #ffffff;
+  --panel: #ffffff;
+  --panel-2: #f8fafc;
+  --border: #d8e0ec;
+  --text: #172033;
+  --muted: #64748b;
+  --input: #ffffff;
+  --input-border: #cbd5e1;
+  --sidebar-text: #475569;
+  --sidebar-icon: #64748b;
+  --sidebar-title: #1e3a8a;
+  --active-bg: #dbeafe;
+  --active-text: #1d4ed8;
+}
+
+.carevo-form {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.form-sidebar {
+  width: 280px;
+  height: 100vh;
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 20;
+  overflow-y: auto;
+}
+
+.brand {
+  padding: 28px 26px;
+  font-size: 26px;
+  letter-spacing: 8px;
+  font-weight: 800;
+  color: var(--sidebar-title);
+}
+
+.side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 22px 0;
+}
+
+.side-link {
+  border: 0;
+  background: transparent;
+  color: var(--sidebar-text);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 26px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  border-left: 3px solid transparent;
+  transition: 0.2s ease;
+}
+
+.side-link span {
+  color: inherit;
+}
+
+.side-link:hover {
+  background: var(--blue-soft);
+  color: var(--blue);
+  border-left-color: var(--blue);
+}
+
+.side-link.active {
+  background: var(--active-bg);
+  color: var(--active-text);
+  border-left-color: var(--active-text);
+}
+
+.side-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--sidebar-icon);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.side-link:hover .side-icon,
+.side-link.active .side-icon {
+  color: currentColor;
+}
+
+.side-icon svg,
+.logout-btn svg,
+.mobile-menu-btn svg,
+.topbar-icon-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 24px 26px;
+  border-top: 1px solid var(--border);
+}
+
+.dark-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--sidebar-text);
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+.toggle {
+  width: 38px;
+  height: 20px;
+  border: 0;
+  border-radius: 999px;
+  background: #94a3b8;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.toggle span {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  transition: 0.2s;
+}
+
+.toggle.active {
+  background: var(--blue);
+}
+
+.toggle.active span {
+  transform: translateX(18px);
+}
+
+.logout-btn {
+  border: 0;
+  background: transparent;
+  color: var(--sidebar-text);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logout-btn:hover {
+  color: var(--red);
+}
+
+.form-main {
+  flex: 1;
+  min-width: 0;
+  margin-left: 280px;
+}
+
+.form-topbar {
+  height: 70px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 36px;
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 120;
+}
+
+.topbar-icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-icon-btn {
+  width: 38px;
+  height: 38px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.topbar-icon-btn:hover,
+.topbar-icon-btn.active {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.form-content {
+  padding: 38px 44px 60px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 34px;
+}
+
+.page-heading h1 {
+  font-size: 32px;
+  margin: 0 0 8px;
+  color: var(--text);
+}
+
+.page-heading p {
+  color: var(--muted);
+  margin: 0;
+  font-size: 16px;
+}
+
+.step-progress {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: start;
+  gap: 10px;
+  margin-bottom: 44px;
+  overflow: visible;
+}
+
+.step-item {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  border: 0;
+  background: #374151;
+  color: #cbd5e1;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  transition: 0.2s ease;
+}
+
+.carevo-form.light .step-circle {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+.carevo-form.dark .step-circle.done,
+.carevo-form.dark .step-circle.active {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+.carevo-form.light .step-circle.done {
+  background: var(--green);
+  color: #ffffff;
+}
+
+.carevo-form.light .step-circle.active {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+.step-label {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.step-label.active {
+  color: var(--blue);
+}
+
+.carevo-form.light .step-item.done .step-label {
+  color: var(--green-strong);
+}
+
+.step-line {
+  position: absolute;
+  top: 21px;
+  left: calc(50% + 30px);
+  width: calc(100% - 60px);
+  height: 2px;
+  background: #4b5563;
+  z-index: 1;
+  border-radius: 999px;
+  transition: 0.2s ease;
+}
+
+.carevo-form.light .step-line {
+  background: #cbd5e1;
+}
+
+.carevo-form.dark .step-line.done {
+  background: var(--blue);
+}
+
+.carevo-form.light .step-line.done {
+  background: var(--green);
+}
+
+.form-grid {
+  display: grid;
+  gap: 26px;
+}
+
+.project-layout,
+.general-project-layout {
+  grid-template-columns: 310px minmax(0, 1fr);
+}
+
+.form-card,
+.left-panel .mini-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.card-header {
+  min-height: 82px;
+  padding: 26px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 21px;
+  color: var(--text);
+}
+
+.card-subtitle,
+.card-header p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.card-body {
+  padding: 28px;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 26px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 22px;
+}
+
+.field-group label,
+.skill-section label {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.field-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  background-color: var(--input);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  border-radius: 9px;
+  padding: 14px 16px;
+  font-size: 15px;
+  outline: none;
+  font-family: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #8b97aa;
+}
+
+.carevo-form.light input::placeholder,
+.carevo-form.light textarea::placeholder {
+  color: #94a3b8;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-soft);
+}
+
+textarea {
+  min-height: 130px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background-color: var(--panel-2);
+}
+
+.carevo-form input[type="date"] {
+  width: 100%;
+  min-height: 50px;
+  height: 50px;
+  cursor: pointer;
+  padding: 14px 48px 14px 16px !important;
+  color: var(--text);
+  background-color: var(--input);
+  border: 1px solid var(--input-border);
+  border-radius: 9px;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 20px 20px;
+}
+
+.carevo-form.dark input[type="date"] {
+  color-scheme: dark;
+  background-image: url("data:image/svg+xml,%3Csvg width='22' height='22' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='3.5' y='5.5' width='17' height='15' rx='2' stroke='%23F8FAFC' stroke-width='2'/%3E%3Cpath d='M8 3.5V7.5' stroke='%23F8FAFC' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M16 3.5V7.5' stroke='%23F8FAFC' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M4 10H20' stroke='%23F8FAFC' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.carevo-form.light input[type="date"] {
+  color-scheme: light;
+  background-image: url("data:image/svg+xml,%3Csvg width='22' height='22' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='3.5' y='5.5' width='17' height='15' rx='2' stroke='%230F172A' stroke-width='2'/%3E%3Cpath d='M8 3.5V7.5' stroke='%230F172A' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M16 3.5V7.5' stroke='%230F172A' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M4 10H20' stroke='%230F172A' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.carevo-form input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  margin-right: -38px;
+  padding: 0;
+}
+
+.carevo-form input[type="date"]:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-soft);
+}
+
+.carevo-form input[type="date"]:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background-color: var(--panel-2);
+}
+
+.carevo-form select {
+  width: 100%;
+  min-height: 50px;
+  height: 50px;
+  padding: 0 46px 0 16px !important;
+  border-radius: 9px;
+  border: 1px solid var(--input-border);
+  background-color: var(--input);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='%2394A3B8' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 18px 18px;
+}
+
+.carevo-form.light select {
+  background-color: #ffffff;
+  color: #172033;
+  border-color: #cbd5e1;
+}
+
+.carevo-form select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-soft);
+}
+
+.carevo-form select option {
+  background: var(--panel);
+  color: var(--text);
+}
+
+.carevo-form.light select option {
+  background: #ffffff;
+  color: #172033;
+}
+
+.carevo-form select::-ms-expand {
+  display: none;
+}
+
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  margin: 22px 0;
+}
+
+.check-row input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--blue);
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 26px 0 20px;
+}
+
+.section-title {
+  margin: 0 0 18px;
+  color: var(--text);
+  font-size: 17px;
+}
+
+.form-bottom-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 22px 28px 28px;
+  border-top: 1px solid var(--border);
+}
+
+.btn-primary,
+.btn-secondary {
+  border-radius: 8px;
+  padding: 14px 22px;
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+
+.btn-primary {
+  border: 0;
+  background: var(--blue);
+  color: white;
+}
+
+.btn-secondary {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-primary:hover {
+  background: var(--blue-strong);
+}
+
+.btn-secondary:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.inline-add-row,
+.skill-add-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px;
+  gap: 12px;
+  align-items: stretch;
+  margin-top: 10px;
+}
+
+.inline-add-row input,
+.skill-add-row input {
+  height: 50px;
+  margin: 0;
+}
+
+.inline-add-row button,
+.skill-add-row button {
+  width: 100%;
+  height: 50px;
+  border: 0;
+  outline: none;
+  border-radius: 9px;
+  background: var(--blue);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s ease;
+}
+
+.inline-add-row button:hover,
+.skill-add-row button:hover {
+  background: var(--blue-strong);
+  transform: translateY(-1px);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.chip {
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--blue);
+  border-radius: 999px;
+  padding: 8px 13px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: 0.2s ease;
+}
+
+.chip:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: var(--red);
+}
+
+.profile-info-wrapper {
+  max-width: 980px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.profile-card-custom {
+  width: 100%;
+}
+
+.profile-info-header {
+  align-items: flex-start;
+}
+
+.profile-simple-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 34px;
+  align-items: start;
+}
+
+.profile-left {
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  border-radius: 16px;
+  padding: 24px 20px;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.carevo-form.light .profile-left {
+  background: #f8fafc;
+}
+
+.profile-photo-wrapper {
+  width: 154px;
+  height: 154px;
+  border-radius: 50%;
+  position: relative;
+  padding: 6px;
+  background: linear-gradient(135deg, var(--blue), rgba(59, 130, 246, 0.2));
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
+}
+
+.profile-photo {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--panel);
+  background: var(--panel);
+}
+
+.profile-plus-btn {
+  position: absolute;
+  right: 8px;
+  bottom: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--blue);
+  color: white;
+  border: 4px solid var(--panel-2);
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.profile-plus-btn:hover {
+  transform: scale(1.05);
+  filter: brightness(1.08);
+}
+
+.carevo-form.light .profile-plus-btn {
+  border-color: #f8fafc;
+}
+
+.profile-upload-input {
+  display: none;
+}
+
+.profile-upload-title {
+  margin: 18px 0 6px;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.profile-upload-desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.profile-file-name {
+  max-width: 100%;
+  margin-top: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-right {
+  min-width: 0;
+}
+
+.profile-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.profile-card-custom textarea {
+  min-height: 170px;
+}
+
+.profile-actions {
+  align-items: center;
+}
+
+.profile-actions>span {
+  display: block;
+}
+
+.experience-card {
+  max-width: 920px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.experience-card .card-header {
+  align-items: flex-start;
+}
+
+.experience-card .input-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 26px;
+}
+
+.experience-card .experience-full,
+.experience-card .field-full {
+  grid-column: 1 / -1;
+}
+
+.experience-card .check-row,
+.experience-card .current-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.experience-card .check-row input,
+.experience-card .current-check input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--blue);
+  flex-shrink: 0;
+}
+
+.experience-card .skill-section {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+}
+
+.experience-card .skill-section label {
+  display: block;
+  margin-bottom: 9px;
+}
+
+.education-wrapper {
+  max-width: 920px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.education-card {
+  width: 100%;
+}
+
+.education-header-card {
+  align-items: flex-start;
+}
+
+.education-info-box,
+.optional-info-box,
+.skill-info-box,
+.certification-info-box {
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: var(--blue-soft);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 15px 16px;
+  margin-bottom: 24px;
+}
+
+.education-info-box strong,
+.optional-info-box strong,
+.skill-info-box strong,
+.certification-info-box strong {
+  display: block;
+  color: var(--blue);
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.education-info-box p,
+.optional-info-box p,
+.skill-info-box p,
+.certification-info-box p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.education-grid {
+  align-items: start;
+}
+
+.education-full {
+  grid-column: 1 / -1;
+}
+
+.education-full textarea {
+  min-height: 145px;
+}
+
+.education-check {
+  margin-top: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+  cursor: pointer;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-weight: 600 !important;
+}
+
+.education-check input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--blue);
+  flex-shrink: 0;
+}
+
+.education-check span {
+  color: var(--muted);
+}
+
+.carevo-form.light .education-info-box,
+.carevo-form.light .optional-info-box,
+.carevo-form.light .skill-info-box,
+.carevo-form.light .certification-info-box {
+  background: #eef4ff;
+  border-color: #bfdbfe;
+}
+
+.skill-wrapper,
+.certification-wrapper {
+  max-width: 920px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.skill-card,
+.certification-card {
+  width: 100%;
+}
+
+.skill-header-card,
+.certification-header-card {
+  align-items: flex-start;
+}
+
+.skill-select-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 26px;
+  margin-bottom: 8px;
+}
+
+.skill-full,
+.certification-full {
+  grid-column: 1 / -1;
+}
+
+.skill-option-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.skill-option {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 12px 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  transition: 0.2s ease;
+}
+
+.skill-option:hover {
+  border-color: rgba(59, 130, 246, 0.55);
+  background: var(--blue-soft);
+}
+
+.skill-option.active {
+  border-color: var(--blue);
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.skill-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid var(--input-border);
+  background: var(--input);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.skill-option.active .skill-check {
+  border-color: var(--blue);
+  background: var(--blue);
+}
+
+.carevo-form.light .skill-option.active .skill-check {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.skill-option span:last-child {
+  min-width: 0;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.skill-custom-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.skill-custom-row input {
+  height: 50px;
+  margin: 0;
+}
+
+.skill-custom-row button {
+  height: 50px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--blue);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.skill-custom-row button:hover {
+  background: var(--blue-strong);
+}
+
+.selected-skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.selected-skill-chip {
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--blue);
+  border-radius: 999px;
+  padding: 8px 13px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.selected-skill-chip:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: var(--red);
+}
+
+.carevo-form.light .skill-option {
+  background: #ffffff;
+  border-color: #d8e0ec;
+  color: #172033;
+}
+
+.carevo-form.light .skill-option:hover,
+.carevo-form.light .skill-option.active {
+  background: #eef4ff;
+  border-color: var(--blue);
+  color: var(--blue-dark);
+}
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mini-card {
+  padding: 18px;
+}
+
+.mini-card h3 {
+  margin: 0 0 16px;
+  color: var(--text);
+}
+
+.thumbnail-box {
+  height: 160px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--input);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.upload-box input {
+  display: none;
+}
+
+.thumbnail-placeholder {
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.thumbnail-placeholder span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 24px;
+}
+
+.thumbnail-placeholder span svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.thumbnail-placeholder p {
+  margin: 0;
+}
+
+.thumbnail-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mini-card small {
+  display: block;
+  margin: 8px 0 14px;
+  color: var(--muted);
+}
+
+.status-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.status-tags span {
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+.carevo-form.dark .status-tags span {
+  background: rgba(71, 85, 105, 0.35);
+  color: #cbd5e1;
+}
+
+.carevo-form.light .status-tags span {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.status-tags span.active {
+  font-weight: 900;
+}
+
+.carevo-form.dark .status-tags span.active,
+.carevo-form.light .status-tags span.active {
+  background: rgba(59, 130, 246, 0.18);
+  color: #2563eb;
+  border: 1px solid rgba(59, 130, 246, 0.45);
+}
+
+.carevo-form.dark .status-tags span.active:nth-child(2),
+.carevo-form.light .status-tags span.active:nth-child(2) {
+  background: rgba(34, 197, 94, 0.18);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.45);
+}
+
+.carevo-form.dark .status-tags span.active:nth-child(3),
+.carevo-form.light .status-tags span.active:nth-child(3) {
+  background: rgba(139, 92, 246, 0.18);
+  color: #7c3aed;
+  border: 1px solid rgba(139, 92, 246, 0.45);
+}
+
+.carevo-form.dark .status-tags span.active:nth-child(4),
+.carevo-form.light .status-tags span.active:nth-child(4) {
+  background: rgba(245, 158, 11, 0.2);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+}
+
+.project-helper-card {
+  padding: 22px;
+}
+
+.project-helper-card .helper-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  display: grid;
+  place-items: center;
+  margin-bottom: 14px;
+}
+
+.project-helper-card .helper-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.project-helper-card h3 {
+  margin: 0 0 8px;
+  color: var(--text);
+}
+
+.project-helper-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.input-with-icon {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  background: var(--input);
+  border: 1px solid var(--input-border);
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.input-with-icon:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-soft);
+}
+
+.input-with-icon svg {
+  width: 20px;
+  height: 20px;
+  color: var(--muted);
+  justify-self: center;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.input-with-icon input {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent;
+  border-radius: 0;
+  padding-left: 0;
+}
+
+.featured-box {
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.featured-box strong {
+  color: var(--text);
+}
+
+.featured-box span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.featured-box input {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  accent-color: var(--blue);
+}
+
+.certification-grid {
+  align-items: start;
+}
+
+.certification-card textarea {
+  min-height: 145px;
+}
+
+.optional-text {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.language-wrapper {
+  max-width: 760px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.language-card {
+  overflow: visible;
+}
+
+.form-card.language-card {
+  overflow: visible;
+}
+
+.radio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.radio-option {
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  border-radius: 9px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.radio-option.active {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: var(--blue-soft);
+}
+
+.radio-option input {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--blue);
+}
+
+.usage-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.usage-tabs button,
+.wide-add-btn {
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--muted);
+  padding: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.usage-tabs button.active,
+.wide-add-btn {
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+}
+
+.wide-add-btn {
+  width: 100%;
+  margin-top: 12px;
+  font-size: 15px;
+}
+
+.searchable-select {
+  position: relative;
+  width: 100%;
+  z-index: 20;
+}
+
+.searchable-select-box {
+  position: relative;
+  z-index: 26;
+  width: 100%;
+  min-height: 52px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 42px;
+  align-items: center;
+  background: var(--input);
+  border: 1px solid var(--input-border);
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.searchable-select-box.no-flag {
+  grid-template-columns: minmax(0, 1fr) 42px;
+}
+
+.searchable-select-box.open,
+.searchable-select-box:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-soft);
+}
+
+.language-flag-preview {
+  width: 42px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-right: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(148, 163, 184, 0.08);
+}
+
+.language-flag-preview img {
+  width: 22px;
+  height: 22px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.searchable-select-box input {
+  width: 100%;
+  height: 52px;
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent;
+  color: var(--text);
+  padding: 0 14px;
+  font-size: 15px;
+}
+
+.searchable-select-box.no-flag input {
+  padding-left: 16px;
+}
+
+.searchable-select-toggle {
+  width: 42px;
+  height: 52px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.searchable-select-toggle:hover {
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--text);
+}
+
+.searchable-select-toggle svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.searchable-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 8px;
+  z-index: 25;
+  overscroll-behavior: contain;
+}
+
+.searchable-option {
+  width: 100%;
+  min-height: 42px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.3;
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+}
+
+.language-option-flag {
+  width: 22px;
+  height: 22px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  flex-shrink: 0;
+}
+
+.searchable-option:hover,
+.searchable-option.active {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.searchable-option.selected {
+  background: rgba(59, 130, 246, 0.22);
+  color: var(--blue);
+  font-weight: 700;
+}
+
+.searchable-empty {
+  padding: 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.empty-step-card {
+  padding: 32px;
+}
+
+.empty-step-card p {
+  color: var(--muted);
+}
+
+.custom-notice-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.55);
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.custom-notice {
+  width: min(440px, 100%);
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 16px;
+}
+
+.notice-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 20px;
+}
+
+.custom-notice-success .notice-icon {
+  background: rgba(34, 197, 94, 0.18);
+  color: #22c55e;
+}
+
+.custom-notice-error .notice-icon {
+  background: rgba(239, 68, 68, 0.18);
+  color: #ef4444;
+}
+
+.notice-content h3 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.notice-content p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.custom-notice button {
+  grid-column: 1 / -1;
+  border: 0;
+  background: var(--blue);
+  color: white;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.notification-wrap {
+  position: relative;
+}
+
+.notification-btn {
+  position: relative;
+}
+
+.notification-btn.active {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.notification-badge {
+  position: absolute;
+  top: 3px;
+  right: 2px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--bg);
+}
+
+.notification-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 360px;
+  max-height: 430px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.42);
+  z-index: 200;
+  overflow: hidden;
+}
+
+.notification-panel::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  right: 22px;
+  width: 14px;
+  height: 14px;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+  transform: rotate(45deg);
+}
+
+.notification-header {
+  position: relative;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.notification-header h3 {
+  margin: 0;
+  font-size: 17px;
+  color: var(--text);
+}
+
+.notification-header p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.clear-notification-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--muted);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.clear-notification-btn:hover {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.clear-notification-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.notification-list {
+  max-height: 340px;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.notification-item {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr);
+  gap: 12px;
+  padding: 13px 12px;
+  border-radius: 12px;
+  background: transparent;
+}
+
+.notification-item:hover {
+  background: var(--panel-2);
+}
+
+.notification-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-top: 5px;
+  background: var(--blue);
+}
+
+.notification-success .notification-dot {
+  background: #22c55e;
+}
+
+.notification-error .notification-dot {
+  background: #ef4444;
+}
+
+.notification-info .notification-dot {
+  background: var(--blue);
+}
+
+.notification-body h4 {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.notification-body p {
+  margin: 0 0 5px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.notification-body span {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.notification-empty {
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.mobile-menu-btn {
+  display: none;
+}
+
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+
+  .project-layout,
+  .general-project-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .left-panel {
+    order: 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .skill-option-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .form-sidebar {
+    transform: translateX(-100%);
+    transition: 0.25s ease;
+  }
+
+  .form-sidebar.show {
+    transform: translateX(0);
+  }
+
+  .form-main {
+    margin-left: 0;
+  }
+
+  .mobile-menu-btn {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 60;
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .hide-mobile-menu-btn {
+    display: none;
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 19;
+    background: rgba(0, 0, 0, 0.45);
+    border: 0;
+  }
+
+  .form-topbar {
+    padding: 0 20px 0 72px;
+    z-index: 120;
+  }
+
+  .form-content {
+    width: 100%;
+    padding: 28px 14px 48px;
+    overflow-x: hidden;
+  }
+
+  .page-heading {
+    align-items: flex-start;
+  }
+
+  .page-heading h1 {
+    font-size: 27px;
+  }
+
+  .input-grid,
+  .profile-row,
+  .skill-select-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-simple-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-left {
+    max-width: 320px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .notification-panel {
+    right: -10px;
+    width: min(340px, calc(100vw - 32px));
+  }
+
+  .form-grid,
+  .project-layout,
+  .general-project-layout {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 18px;
+    width: 100%;
+  }
+
+  .left-panel {
+    order: 0 !important;
+    width: 100%;
+    display: grid;
+    gap: 18px;
+  }
+
+  .form-card,
+  .mini-card,
+  .experience-card,
+  .education-card,
+  .skill-card,
+  .certification-card,
+  .language-card {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 14px;
+  }
+
+  .card-header {
+    padding: 22px 18px;
+    min-height: auto;
+  }
+
+  .card-body {
+    padding: 20px 18px;
+  }
+
+  .form-bottom-actions {
+    padding: 20px 18px;
+  }
+
+  .mini-card {
+    padding: 18px;
+  }
+
+  .mini-card h3 {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+
+  .thumbnail-box {
+    height: 150px;
+    border-radius: 12px;
+  }
+
+  .thumbnail-placeholder {
+    gap: 8px;
+  }
+
+  .thumbnail-placeholder span {
+    width: 38px;
+    height: 38px;
+  }
+
+  .thumbnail-placeholder p {
+    font-size: 14px;
+  }
+
+  .status-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .status-tags span {
+    font-size: 11px;
+    padding: 7px 11px;
+  }
+
+  .project-helper-card {
+    padding: 20px;
+  }
+
+  .project-helper-card .helper-icon {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 14px;
+  }
+
+  .project-helper-card h3 {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .project-helper-card p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .experience-card {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .experience-card .card-header {
+    padding: 24px 18px 18px;
+  }
+
+  .experience-card .card-header h2 {
+    font-size: 20px;
+  }
+
+  .experience-card .card-header p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .experience-card .input-grid {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 18px;
+    width: 100%;
+  }
+
+  .experience-card .field-group,
+  .field-group {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .experience-card .experience-full,
+  .experience-card .field-full {
+    grid-column: 1 / -1;
+  }
+
+  input,
+  select,
+  textarea,
+  .carevo-form select,
+  .carevo-form input[type="date"] {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .experience-card input,
+  .experience-card select,
+  .experience-card textarea {
+    width: 100%;
+  }
+
+  .experience-card .check-row,
+  .experience-card .current-check {
+    margin-top: 8px;
+    align-items: flex-start;
+    gap: 9px;
+    line-height: 1.35;
+  }
+
+  .experience-card .check-row input,
+  .experience-card .current-check input {
+    margin-top: 2px;
+  }
+
+  .experience-card textarea {
+    min-height: 135px;
+  }
+
+  .inline-add-row,
+  .skill-add-row,
+  .skill-custom-row {
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  .inline-add-row button,
+  .skill-add-row button,
+  .skill-custom-row button {
+    width: 100%;
+    height: 48px;
+  }
+}
+
+@media (max-width: 820px) {
+  .step-progress {
+    grid-template-columns: repeat(7, minmax(46px, 1fr));
+    gap: 4px;
+    overflow-x: auto;
+    padding: 0 2px 8px;
+    margin-bottom: 28px;
+  }
+
+  .step-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    font-size: 13px;
+  }
+
+  .step-label {
+    font-size: 9px;
+    line-height: 1.15;
+    margin-top: 7px;
+  }
+
+  .step-line {
+    top: 17px;
+    left: calc(50% + 22px);
+    width: calc(100% - 44px);
+  }
+
+  .skill-option-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .skill-custom-row,
+  .inline-add-row,
+  .skill-add-row {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-custom-row button,
+  .inline-add-row button,
+  .skill-add-row button {
+    width: 100%;
+  }
+
+  .radio-grid,
+  .usage-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .searchable-select {
+    z-index: 20;
+  }
+
+  .searchable-dropdown {
+    max-height: 190px;
+    z-index: 25;
+  }
+}
+
+@media (max-width: 520px) {
+  .form-content {
+    padding: 24px 12px 44px;
+  }
+
+  .page-heading {
+    margin-bottom: 24px;
+  }
+
+  .page-heading h1 {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .page-heading p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .form-grid,
+  .project-layout,
+  .general-project-layout {
+    gap: 16px;
+  }
+
+  .card-header {
+    padding: 20px 16px 16px;
+  }
+
+  .card-header h2 {
+    font-size: 20px;
+  }
+
+  .card-subtitle,
+  .card-header p {
+    font-size: 13px;
+  }
+
+  .card-body {
+    padding: 18px 16px;
+  }
+
+  .form-bottom-actions {
+    padding: 18px 16px;
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+
+  .step-progress {
+    grid-template-columns: repeat(7, 48px);
+    justify-content: flex-start;
+  }
+
+  .step-circle {
+    width: 31px;
+    height: 31px;
+    border-radius: 9px;
+    font-size: 12px;
+  }
+
+  .step-line {
+    top: 15px;
+    left: calc(50% + 18px);
+    width: calc(100% - 34px);
+  }
+
+  .step-label {
+    font-size: 8px;
+  }
+
+  .skill-option-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-option {
+    min-height: 46px;
+    padding: 11px 12px;
+  }
+
+  .skill-option span:last-child {
+    font-size: 12px;
+  }
+
+  .carevo-form input[type="date"],
+  .carevo-form select {
+    height: 48px;
+    min-height: 48px;
+    font-size: 14px;
+  }
+
+  .carevo-form input[type="date"] {
+    padding-right: 44px !important;
+    background-position: right 14px center;
+    background-size: 18px 18px;
+  }
+
+  .carevo-form input[type="date"]::-webkit-calendar-picker-indicator {
+    width: 42px;
+    height: 42px;
+    margin-right: -36px;
+  }
+
+  .carevo-form select {
+    padding-right: 44px !important;
+    background-position: right 14px center;
+  }
+
+  .profile-photo-wrapper {
+    width: 132px;
+    height: 132px;
+  }
+
+  .profile-plus-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 22px;
+  }
+
+  .mini-card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .mini-card h3 {
+    font-size: 18px;
+  }
+
+  .thumbnail-box {
+    height: 152px;
+  }
+
+  .thumbnail-placeholder p {
+    font-size: 14px;
+  }
+
+  .project-helper-card {
+    padding: 20px;
+  }
+
+  .project-helper-card .helper-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+  }
+
+  .project-helper-card h3 {
+    font-size: 25px;
+  }
+
+  .project-helper-card p {
+    font-size: 14px;
+  }
+
+  .experience-card .card-header {
+    padding: 22px 18px 16px;
+  }
+
+  .experience-card .card-header h2 {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .experience-card .card-body {
+    padding: 20px 18px;
+  }
+
+  .experience-card .input-grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px;
+  }
+
+  .field-group label,
+  .skill-section label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 14px;
+    border-radius: 9px;
+    padding: 13px 15px;
+  }
+
+  .experience-card .current-check {
+    display: flex;
+    width: fit-content;
+    max-width: 100%;
+    font-size: 13px;
+  }
+
+  .experience-card .current-check span {
+    display: inline-block;
+    max-width: 170px;
+  }
+
+  .status-tags {
+    gap: 7px;
+  }
+
+  .status-tags span {
+    font-size: 10.5px;
+    padding: 7px 10px;
+  }
+}
+
+@media (max-width: 390px) {
+  .form-content {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .card-body {
+    padding: 16px 14px;
+  }
+
+  .mini-card {
+    padding: 15px;
+  }
+
+  .experience-card .card-body {
+    padding: 18px 16px;
+  }
+
+  .thumbnail-box {
+    height: 145px;
+  }
+
+  .project-helper-card h3 {
+    font-size: 23px;
+  }
+
+  .project-helper-card p {
+    font-size: 13px;
+  }
+
+  .carevo-form select,
+  .carevo-form input[type="date"],
+  input,
+  textarea {
+    font-size: 13.5px;
+  }
+}
+
+/* =========================================================
+   FORM SCROLLBAR FIX
+   Supaya scrollbar tidak putih seperti screenshot dan step
+   progress tidak geser ke luar layar.
+========================================================= */
+.carevo-form,
+.carevo-form * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+}
+
+.carevo-form ::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.carevo-form ::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.carevo-form ::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.36) !important;
+  border-radius: 999px;
+}
+
+.form-sidebar {
+  overflow-x: hidden !important;
+  scrollbar-gutter: stable;
+}
+
+.carevo-form.dark .form-sidebar {
+  background: #070d18 !important;
+}
+
+.brand {
+  letter-spacing: 7px !important;
+  font-size: 25px !important;
+  line-height: 1 !important;
+  white-space: nowrap;
+}
+
+.step-progress {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+  justify-content: center;
+}
+
+.step-item {
+  min-width: 0;
+}
+
+.step-circle {
+  flex: 0 0 auto;
+}
+
+.step-line {
+  min-width: 18px;
+  max-width: 70px;
+  flex: 1 1 40px;
+}
+
+.form-main,
+.form-content,
+.form-card,
+.step-content,
+.form-grid,
+.form-field {
+  max-width: 100%;
+}
+
+.form-field select,
+.form-field input,
+.form-field textarea,
+.language-input-with-flag,
+.language-custom-select {
+  max-width: 100%;
+}
+
+@media (max-width: 760px) {
+  .brand {
+    font-size: 22px !important;
+    letter-spacing: 5px !important;
+  }
+
+  .step-progress {
+    gap: 4px !important;
+    overflow: hidden !important;
+  }
+
+  .step-line {
+    min-width: 10px !important;
+    max-width: 24px !important;
+  }
+}
+
+/* =========================
+   FORM SCROLLBAR + SELECT FIX
+========================= */
+.form-shell,
+.form-wrapper,
+.form-card,
+.form-card *,
+.form-content,
+.form-page,
+.form-step-content {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.45) transparent;
+}
+
+.form-shell::-webkit-scrollbar,
+.form-wrapper::-webkit-scrollbar,
+.form-card::-webkit-scrollbar,
+.form-card *::-webkit-scrollbar,
+.form-content::-webkit-scrollbar,
+.form-page::-webkit-scrollbar,
+.form-step-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.form-shell::-webkit-scrollbar-track,
+.form-wrapper::-webkit-scrollbar-track,
+.form-card::-webkit-scrollbar-track,
+.form-card *::-webkit-scrollbar-track,
+.form-content::-webkit-scrollbar-track,
+.form-page::-webkit-scrollbar-track,
+.form-step-content::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.form-shell::-webkit-scrollbar-thumb,
+.form-wrapper::-webkit-scrollbar-thumb,
+.form-card::-webkit-scrollbar-thumb,
+.form-card *::-webkit-scrollbar-thumb,
+.form-content::-webkit-scrollbar-thumb,
+.form-page::-webkit-scrollbar-thumb,
+.form-step-content::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.42) !important;
+  border-radius: 999px;
+}
+
+.field-group select,
+.form-card select,
+.language-input-with-flag select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 52px !important;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%) !important;
+  background-position: calc(100% - 25px) 52%, calc(100% - 17px) 52% !important;
+  background-size: 8px 8px, 8px 8px !important;
+  background-repeat: no-repeat !important;
+}
+
+.language-form-grid,
+.language-editor-grid {
+  overflow: visible !important;
+}
+
+.language-input-with-flag {
+  grid-template-columns: 72px minmax(0, 1fr) 58px !important;
+}
+
+.language-input-with-flag button {
+  justify-self: center;
+  margin-right: 10px;
+}
+
+/* =========================================================
+   FINAL FORM CLEAN FIX
+   - status project polos, tanpa efek tambahan
+   - arrow select tidak di ujung
+   - mobile project dan experience rapi
+========================================================= */
+
+.carevo-form select {
+  padding-right: 48px !important;
+  background-position: right 18px center !important;
+}
+
+.status-tags span,
+.status-tags span.active,
+.inline-add-row button,
+.skill-add-row button,
+.skill-custom-row button,
+.btn-primary,
+.btn-secondary {
+  transition: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+.inline-add-row button:hover,
+.skill-add-row button:hover,
+.skill-custom-row button:hover,
+.btn-primary:hover,
+.btn-secondary:hover,
+.status-tags span:hover,
+.status-tags span.active:hover {
+  transform: none !important;
+  filter: none !important;
+}
+
+.carevo-form.dark .status-tags span.active,
+.carevo-form.light .status-tags span.active {
+  background: rgba(59, 130, 246, 0.18) !important;
+  color: #2563eb !important;
+  border: 1px solid rgba(59, 130, 246, 0.45) !important;
+}
+
+.carevo-form.dark .status-tags span.active:nth-child(2),
+.carevo-form.light .status-tags span.active:nth-child(2) {
+  background: rgba(34, 197, 94, 0.18) !important;
+  color: #16a34a !important;
+  border: 1px solid rgba(34, 197, 94, 0.45) !important;
+}
+
+.carevo-form.dark .status-tags span.active:nth-child(3),
+.carevo-form.light .status-tags span.active:nth-child(3) {
+  background: rgba(139, 92, 246, 0.18) !important;
+  color: #7c3aed !important;
+  border: 1px solid rgba(139, 92, 246, 0.45) !important;
+}
+
+.carevo-form.dark .status-tags span.active:nth-child(4),
+.carevo-form.light .status-tags span.active:nth-child(4) {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #d97706 !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+}
+
+@media (max-width: 900px) {
+
+  .project-layout,
+  .general-project-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .left-panel {
+    order: 0 !important;
+    width: 100%;
+  }
+
+  .experience-card .input-grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px;
+  }
+
+  .project-layout .form-card,
+  .general-project-layout .form-card,
+  .experience-card {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .form-content {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    overflow-x: hidden;
+  }
+
+  .project-layout,
+  .general-project-layout,
+  .form-grid {
+    gap: 16px !important;
+  }
+
+  .mini-card,
+  .form-card,
+  .experience-card {
+    border-radius: 14px;
+  }
+
+  .thumbnail-box {
+    height: 150px;
+  }
+
+  .project-helper-card h3 {
+    font-size: 23px;
+  }
+
+  .experience-card .card-body,
+  .card-body {
+    padding: 18px 16px !important;
+  }
+
+  .experience-card .field-group,
+  .field-group {
+    margin-bottom: 0;
+  }
+
+  .form-bottom-actions {
+    flex-direction: column-reverse !important;
+  }
+}
+
+
+
+/* =========================================================
+   CAREVO FORM FINAL OVERRIDE
+   - select pakai chevron normal
+   - panah select agak masuk dan center
+   - project status polos tanpa efek hover
+   - project mobile: Media & Links di atas
+   - experience mobile 1 kolom
+   - tetap support dark/light
+========================================================= */
+
+.carevo-form select,
+.carevo-form .field-group select,
+.carevo-form .form-card select,
+.carevo-form .experience-card select,
+.carevo-form .education-card select,
+.carevo-form .skill-card select,
+.carevo-form .certification-card select,
+.carevo-form .language-card select,
+.carevo-form .project-card select,
+.carevo-form .profile-card-custom select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  min-height: 50px !important;
+  height: 50px !important;
+  padding: 0 52px 0 16px !important;
+  background-color: var(--input) !important;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='%2364758B' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 18px center !important;
+  background-size: 18px 18px !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--text) !important;
+  border-radius: 9px !important;
+  font-family: inherit !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+}
+
+.carevo-form.light select {
+  background-color: #ffffff !important;
+  color: #172033 !important;
+  border-color: #cbd5e1 !important;
+}
+
+.carevo-form.dark select {
+  background-color: var(--input) !important;
+  color: var(--text) !important;
+  border-color: var(--input-border) !important;
+}
+
+.carevo-form select:focus {
+  border-color: var(--blue) !important;
+  box-shadow: 0 0 0 3px var(--blue-soft) !important;
+}
+
+.carevo-form select::-ms-expand,
+.carevo-form select::-webkit-details-marker,
+.carevo-form select::marker {
+  display: none !important;
+}
+
+/* Override rule gradient yang bikin icon select aneh */
+.field-group select,
+.form-card select,
+.language-input-with-flag select {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='%2364758B' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-position: right 18px center !important;
+  background-size: 18px 18px !important;
+}
+
+.carevo-form input[type="date"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  min-height: 50px !important;
+  height: 50px !important;
+  padding: 0 52px 0 16px !important;
+  background-repeat: no-repeat !important;
+  background-position: right 18px center !important;
+  background-size: 20px 20px !important;
+}
+
+.carevo-form input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0 !important;
+  cursor: pointer !important;
+  width: 44px !important;
+  height: 44px !important;
+  margin-right: -40px !important;
+  padding: 0 !important;
+}
+
+/* Project status polos */
+.status-tags span,
+.status-tags span:hover,
+.status-tags span.active,
+.status-tags span.active:hover {
+  transition: none !important;
+  transform: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+}
+
+.carevo-form.dark .status-tags span {
+  background: rgba(71, 85, 105, 0.35) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid transparent !important;
+}
+
+.carevo-form.light .status-tags span {
+  background: #e2e8f0 !important;
+  color: #475569 !important;
+  border: 1px solid transparent !important;
+}
+
+.carevo-form.dark .status-tags span.active:nth-child(1),
+.carevo-form.light .status-tags span.active:nth-child(1) {
+  background: rgba(59, 130, 246, 0.18) !important;
+  color: #2563eb !important;
+  border: 1px solid rgba(59, 130, 246, 0.45) !important;
+}
+
+.carevo-form.dark .status-tags span.active:nth-child(2),
+.carevo-form.light .status-tags span.active:nth-child(2) {
+  background: rgba(34, 197, 94, 0.18) !important;
+  color: #16a34a !important;
+  border: 1px solid rgba(34, 197, 94, 0.45) !important;
+}
+
+.carevo-form.dark .status-tags span.active:nth-child(3),
+.carevo-form.light .status-tags span.active:nth-child(3) {
+  background: rgba(139, 92, 246, 0.18) !important;
+  color: #7c3aed !important;
+  border: 1px solid rgba(139, 92, 246, 0.45) !important;
+}
+
+.carevo-form.dark .status-tags span.active:nth-child(4),
+.carevo-form.light .status-tags span.active:nth-child(4) {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #d97706 !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+}
+
+/* Button polos */
+.btn-primary,
+.btn-secondary,
+.inline-add-row button,
+.skill-add-row button,
+.skill-custom-row button,
+.wide-add-btn,
+.usage-tabs button {
+  transition: none !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover,
+.inline-add-row button:hover,
+.skill-add-row button:hover,
+.skill-custom-row button:hover,
+.wide-add-btn:hover,
+.usage-tabs button:hover {
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Searchable language */
+.searchable-select,
+.language-custom-select {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.searchable-select-box {
+  overflow: hidden !important;
+}
+
+.searchable-dropdown,
+.language-custom-menu {
+  z-index: 999 !important;
+  max-height: 240px !important;
+  overscroll-behavior: contain !important;
+}
+
+.searchable-select-toggle,
+.language-input-with-flag button {
+  color: var(--muted) !important;
+  display: grid !important;
+  place-items: center !important;
+}
+
+.searchable-select-toggle svg,
+.language-input-with-flag button svg {
+  width: 18px !important;
+  height: 18px !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 2.2 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+/* Desktop layout */
+.project-layout,
+.general-project-layout {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: 310px minmax(0, 1fr) !important;
+  gap: 26px !important;
+  align-items: start !important;
+}
+
+.left-panel {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+}
+
+.experience-card {
+  width: 100% !important;
+  max-width: 920px !important;
+}
+
+.experience-card .input-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 22px 26px !important;
+}
+
+.experience-card .experience-full,
+.experience-card .field-full,
+.experience-card .skill-section {
+  grid-column: 1 / -1 !important;
+}
+
+.form-content {
+  width: 100% !important;
+  max-width: 1280px !important;
+  overflow-x: hidden !important;
+}
+
+.step-progress {
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  padding-bottom: 8px !important;
+}
+
+.step-line {
+  pointer-events: none !important;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .form-content {
+    width: 100% !important;
+    padding: 28px 14px 48px !important;
+    overflow-x: hidden !important;
+  }
+
+  .form-grid,
+  .project-layout,
+  .general-project-layout {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+    width: 100% !important;
+  }
+
+  .left-panel {
+    order: 0 !important;
+    width: 100% !important;
+    display: grid !important;
+    gap: 18px !important;
+  }
+
+  .form-card,
+  .mini-card,
+  .experience-card,
+  .education-card,
+  .skill-card,
+  .certification-card,
+  .language-card,
+  .profile-card-custom {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 14px !important;
+  }
+
+  .card-header {
+    padding: 22px 18px !important;
+    min-height: auto !important;
+  }
+
+  .card-body {
+    padding: 20px 18px !important;
+  }
+
+  .form-bottom-actions {
+    padding: 20px 18px !important;
+  }
+
+  .experience-card {
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .experience-card .input-grid,
+  .input-grid,
+  .profile-row,
+  .skill-select-grid,
+  .education-grid,
+  .certification-grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+    width: 100% !important;
+  }
+
+  .experience-card .field-group,
+  .field-group {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+  }
+
+  .experience-card .experience-full,
+  .experience-card .field-full,
+  .experience-card .skill-section,
+  .education-full,
+  .skill-full,
+  .certification-full {
+    grid-column: 1 / -1 !important;
+  }
+
+  input,
+  select,
+  textarea,
+  .carevo-form select,
+  .carevo-form input[type="date"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .inline-add-row,
+  .skill-add-row,
+  .skill-custom-row {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .inline-add-row button,
+  .skill-add-row button,
+  .skill-custom-row button {
+    width: 100% !important;
+    height: 48px !important;
+  }
+
+  .profile-simple-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .profile-left {
+    max-width: 320px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+}
+
+@media (max-width: 820px) {
+  .step-progress {
+    grid-template-columns: repeat(7, 52px) !important;
+    justify-content: flex-start !important;
+    gap: 5px !important;
+    overflow-x: auto !important;
+    padding: 0 2px 8px !important;
+    margin-bottom: 28px !important;
+  }
+
+  .step-circle {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 10px !important;
+    font-size: 13px !important;
+  }
+
+  .step-label {
+    font-size: 9px !important;
+    line-height: 1.15 !important;
+    margin-top: 7px !important;
+  }
+
+  .step-line {
+    top: 17px !important;
+    left: calc(50% + 20px) !important;
+    width: 30px !important;
+  }
+
+  .skill-option-grid,
+  .radio-grid,
+  .usage-tabs {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .form-content {
+    padding: 24px 12px 44px !important;
+  }
+
+  .page-heading {
+    margin-bottom: 24px !important;
+  }
+
+  .page-heading h1 {
+    font-size: 24px !important;
+    line-height: 1.2 !important;
+  }
+
+  .page-heading p {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .card-header {
+    padding: 20px 16px 16px !important;
+  }
+
+  .card-body {
+    padding: 18px 16px !important;
+  }
+
+  .form-bottom-actions {
+    padding: 18px 16px !important;
+    flex-direction: column-reverse !important;
+    gap: 12px !important;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100% !important;
+  }
+
+  .carevo-form input[type="date"],
+  .carevo-form select {
+    height: 48px !important;
+    min-height: 48px !important;
+    font-size: 14px !important;
+    background-position: right 16px center !important;
+  }
+
+  .thumbnail-box {
+    height: 152px !important;
+  }
+
+  .status-tags {
+    gap: 7px !important;
+  }
+
+  .status-tags span {
+    font-size: 10.5px !important;
+    padding: 7px 10px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .form-content {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .card-body {
+    padding: 16px 14px !important;
+  }
+
+  .mini-card {
+    padding: 15px !important;
+  }
+
+  .thumbnail-box {
+    height: 145px !important;
+  }
+
+  .carevo-form select,
+  .carevo-form input[type="date"],
+  input,
+  textarea {
+    font-size: 13.5px !important;
+  }
+}
+/* =========================================================
+   CAREVO FINAL FORM FIXES
+   - same clean control shape across form/dashboard
+   - responsive HP mode
+   - flag contrast in light mode
+   ========================================================= */
+.carevo-form,
+.form-shell,
+.form-card,
+.card-body,
+.input-grid,
+.field-group {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.form-card input,
+.form-card select,
+.form-card textarea,
+.field-group input,
+.field-group select,
+.field-group textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.form-card select,
+.field-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 3px),
+    calc(100% - 12px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 44px !important;
+}
+
+.form-card select option,
+.field-group select option {
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.skill-select-grid,
+.input-grid,
+.language-form-grid,
+.language-editor-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.skill-option-grid {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) !important;
+}
+
+.skill-option {
+  min-height: 50px;
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.selected-skill-list {
+  gap: 10px;
+}
+
+.language-input-with-flag {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.language-input-with-flag > span,
+.language-flag-preview {
+  background: #ffffff !important;
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.language-flag-preview img,
+.language-option-flag,
+.language-input-with-flag img {
+  background: #ffffff;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+@media (max-width: 900px) {
+  .form-card,
+  .experience-card,
+  .skill-card,
+  .language-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .input-grid,
+  .skill-select-grid,
+  .language-form-grid,
+  .language-editor-grid,
+  .experience-card .input-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .form-bottom-actions,
+  .skill-custom-row,
+  .skill-add-row {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .form-bottom-actions button,
+  .skill-custom-row button,
+  .skill-add-row button {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .carevo-form {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .form-card,
+  .experience-card,
+  .skill-card,
+  .language-card {
+    padding: 18px !important;
+    border-radius: 20px !important;
+  }
+
+  .stepper,
+  .form-stepper {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .skill-option-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .selected-skill-chip {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ==========================================================
+   CAREVO FINAL FORM FIX
+   Tujuan: merapikan form desktop/mobile, select, checkbox,
+   date input, radio, bendera, dan layout agar tidak pecah.
+   ========================================================== */
+* { box-sizing: border-box; }
+.carevo-form,
+.carevo-form * { box-sizing: border-box; }
+
+.carevo-form select,
+.carevo-form input,
+.carevo-form textarea,
+.form-card select,
+.form-card input,
+.form-card textarea,
+.field-group select,
+.field-group input,
+.field-group textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  background-color: #070d17;
+  color: #f8fafc;
+}
+
+.carevo-form select,
+.form-card select,
+.field-group select {
+  background-image: linear-gradient(45deg, transparent 50%, #94a3b8 50%), linear-gradient(135deg, #94a3b8 50%, transparent 50%);
+  background-position: calc(100% - 24px) 50%, calc(100% - 17px) 50%;
+  background-size: 7px 7px, 7px 7px;
+  background-repeat: no-repeat;
+  padding-right: 54px !important;
+}
+
+.carevo-form select option,
+.form-card select option,
+.field-group select option {
+  background: #0b1220 !important;
+  color: #f8fafc !important;
+  padding: 12px 14px;
+}
+
+.carevo-form.light select,
+.carevo-form.light input,
+.carevo-form.light textarea,
+.theme-light .form-card select,
+.theme-light .form-card input,
+.theme-light .form-card textarea {
+  background-color: #ffffff;
+  color: #0f172a;
+  border-color: rgba(15, 23, 42, 0.14);
+}
+
+.input-grid,
+.education-grid,
+.experience-form-grid,
+.project-grid,
+.certification-grid,
+.language-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 24px;
+  align-items: start;
+}
+
+.field-group,
+.form-field,
+.dash-field {
+  min-width: 0;
+  width: 100%;
+}
+
+.education-check,
+.check-row,
+.current-check,
+.field-checkbox,
+.form-check-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  min-height: 0 !important;
+  margin: 10px 0 0 !important;
+  padding: 0 !important;
+  color: #bfdbfe !important;
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+  white-space: normal !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.education-check input,
+.check-row input,
+.current-check input,
+.field-checkbox input,
+.form-check-row input,
+input[type="checkbox"] {
+  width: 18px !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  accent-color: #3b82f6;
+  appearance: auto !important;
+  -webkit-appearance: checkbox !important;
+}
+
+.education-check span,
+.check-row span,
+.current-check span {
+  display: inline !important;
+  max-width: none !important;
+}
+
+.form-bottom-actions,
+.card-actions,
+.profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.form-bottom-actions button,
+.card-actions button,
+.profile-actions button {
+  min-width: 150px;
+}
+
+.skill-select-grid,
+.language-proficiency-grid,
+.proficiency-grid,
+.frequency-grid,
+.status-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+
+.skill-option,
+.proficiency-option,
+.frequency-option,
+.status-option,
+.language-radio-card {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.proficiency-option label,
+.frequency-option label,
+.status-option label,
+.skill-option label {
+  min-width: 0 !important;
+}
+
+.language-flag-preview,
+.language-option-flag,
+.language-input-with-flag > span,
+.language-input-with-flag img,
+.language-flag-img,
+.language-flag {
+  background: #ffffff !important;
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.04) !important;
+  overflow: hidden !important;
+}
+
+.language-option-flag,
+.language-flag-img,
+.language-input-with-flag img {
+  object-fit: cover !important;
+}
+
+.searchable-select-box,
+.language-input-with-flag,
+.language-custom-select {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+.searchable-options,
+.language-options,
+.searchable-dropdown {
+  z-index: 9999 !important;
+  max-height: 260px !important;
+  overflow-y: auto !important;
+}
+
+@media (max-width: 1024px) {
+  .input-grid,
+  .education-grid,
+  .experience-form-grid,
+  .project-grid,
+  .certification-grid,
+  .language-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .form-card,
+  .education-card,
+  .experience-card,
+  .skill-card,
+  .language-card,
+  .project-card,
+  .certification-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-inline: auto !important;
+    padding-inline: 18px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .carevo-form,
+  .carevo-form .form-main,
+  .form-content,
+  .form-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .form-card {
+    border-radius: 20px !important;
+    padding: 18px !important;
+  }
+
+  .field-group label,
+  .form-field label {
+    font-size: 12px !important;
+    letter-spacing: .08em !important;
+  }
+
+  .carevo-form input,
+  .carevo-form select,
+  .carevo-form textarea,
+  .form-card input,
+  .form-card select,
+  .form-card textarea {
+    min-height: 52px !important;
+    font-size: 15px !important;
+  }
+
+  .skill-select-grid,
+  .language-proficiency-grid,
+  .proficiency-grid,
+  .frequency-grid,
+  .status-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .form-bottom-actions {
+    flex-direction: column-reverse !important;
+    align-items: stretch !important;
+  }
+
+  .form-bottom-actions button {
+    width: 100% !important;
+  }
+}
+
+/* ===== CAREVO FORM FINAL PATCH ===== */
+.form-card select,
+.form-card input,
+.form-card textarea {
+  min-width: 0;
+  max-width: 100%;
+}
+.form-card select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #08111f !important;
+  color: #f8fafc !important;
+  border: 1px solid #22304a !important;
+  border-radius: 12px !important;
+  background-image: linear-gradient(45deg, transparent 50%, #93a4bd 50%), linear-gradient(135deg, #93a4bd 50%, transparent 50%);
+  background-position: calc(100% - 21px) 50%, calc(100% - 14px) 50%;
+  background-size: 7px 7px, 7px 7px;
+  background-repeat: no-repeat;
+  padding-right: 44px !important;
+}
+.form-card select option { background: #0b1220 !important; color: #f8fafc !important; }
+.input-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.field-group .current-check,
+.check-row.current-check {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  margin-top: 12px !important;
+  color: #9fb1cc !important;
+  line-height: 1.35 !important;
+}
+.field-group .current-check input,
+.check-row.current-check input {
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px !important;
+  margin: 0 !important;
+}
+@media (max-width: 768px) {
+  .input-grid { grid-template-columns: 1fr !important; }
+  .form-card { padding: 18px !important; }
+  .form-bottom-actions { display: grid !important; grid-template-columns: 1fr !important; }
+}
+
+/* Final form routing + responsive cleanup */
+.carevo-form select,
+.carevo-form option {
+  background-color: #07101d;
+  color: #f8fbff;
+}
+
+.carevo-form.light select,
+.carevo-form.light option {
+  background-color: #ffffff;
+  color: #07101d;
+}
+
+@media (max-width: 768px) {
+  .input-grid,
+  .skill-select-grid,
+  .form-two-col,
+  .checkbox-grid,
+  .language-level-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .form-content {
+    padding-inline: 16px !important;
+  }
+
+  .form-card,
+  .skill-card {
+    max-width: 100% !important;
+    overflow: hidden;
+  }
+}
+
+/* === FINAL CAREVO FORM FIX: clean native controls, language radio, select light/dark, mobile === */
+.carevo-form input[type="checkbox"],
+.carevo-form input[type="radio"] {
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  max-width: 18px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 4px !important;
+  display: inline-block !important;
+  background: initial !important;
+  color: initial !important;
+  box-shadow: none !important;
+}
+.carevo-form input[type="radio"] { border-radius: 50% !important; }
+.carevo-form .current-check,
+.carevo-form .check-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  width: 100% !important;
+  margin-top: 14px !important;
+  line-height: 1.3 !important;
+  white-space: normal !important;
+  color: var(--muted) !important;
+}
+.radio-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+.radio-option {
+  min-height: 78px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 14px !important;
+  padding: 16px 20px !important;
+  overflow: hidden !important;
+}
+.radio-option span {
+  display: block !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  white-space: normal !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+  line-height: 1.25 !important;
+  letter-spacing: 1.5px !important;
+}
+.carevo-form select,
+.carevo-form .form-card select,
+.carevo-form .field-group select {
+  color: var(--text) !important;
+  background-color: var(--input) !important;
+  border-color: var(--input-border) !important;
+  min-height: 54px !important;
+}
+.carevo-form select option,
+.carevo-form .form-card select option,
+.carevo-form .field-group select option {
+  color: #f8fafc !important;
+  background: #0b1220 !important;
+}
+.carevo-form.light select,
+.carevo-form.light .form-card select,
+.carevo-form.light .field-group select {
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+  border-color: #bfdbfe !important;
+}
+.carevo-form.light select option,
+.carevo-form.light .form-card select option,
+.carevo-form.light .field-group select option {
+  color: #0f172a !important;
+  background: #ffffff !important;
+}
+.searchable-select-box,
+.searchable-dropdown,
+.language-custom-select {
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+.searchable-select-box input { min-width: 0 !important; }
+.language-flag-preview,
+.language-option-flag {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, .12) !important;
+  border-radius: 10px !important;
+  object-fit: cover !important;
+}
+@media (max-width: 768px) {
+  .radio-grid,
+  .skill-select-grid,
+  .input-grid { grid-template-columns: 1fr !important; }
+  .radio-option { min-height: 64px !important; padding: 14px 16px !important; }
+  .form-content { padding-left: 16px !important; padding-right: 16px !important; }
+  .form-card { padding-left: 16px !important; padding-right: 16px !important; }
+}
+
+
+/* === CAREVO final stability fixes === */
+.carevo-form.light,
+.carevo-form.light .form-main,
+.carevo-form.light .form-card {
+  color: #0f172a;
+}
+.carevo-form.light select,
+.carevo-form.light select option,
+.carevo-form.light input,
+.carevo-form.light textarea,
+.carevo-form.light .searchable-select-box,
+.carevo-form.light .searchable-dropdown {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+.carevo-form.dark select,
+.carevo-form.dark select option,
+.carevo-form.dark input,
+.carevo-form.dark textarea,
+.carevo-form.dark .searchable-select-box,
+.carevo-form.dark .searchable-dropdown {
+  background: #08111f !important;
+  color: #f8fafc !important;
+}
+.radio-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+}
+.radio-option {
+  min-height: 76px !important;
+  display: grid !important;
+  grid-template-columns: 28px 1fr !important;
+  align-items: center !important;
+  column-gap: 14px !important;
+  padding: 16px 20px !important;
+  overflow: hidden !important;
+}
+.radio-option input[type="radio"] {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  margin: 0 !important;
+  accent-color: #3b82f6 !important;
+}
+.radio-option .radio-label-text,
+.radio-option span:last-child {
+  display: block !important;
+  width: 100% !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  white-space: normal !important;
+  line-height: 1.25 !important;
+  text-align: left !important;
+}
+.language-flag-preview,
+.language-option-flag,
+.language-flag,
+.flag-box {
+  background: #ffffff !important;
+  border: 1px solid #dbe4f0 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.searchable-option {
+  color: inherit !important;
+}
+.searchable-option.active,
+.searchable-option:hover,
+.carevo-form.light .searchable-option.active,
+.carevo-form.light .searchable-option:hover {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+.skill-select-grid select,
+.skill-card select {
+  min-height: 56px !important;
+}
+@media (max-width: 720px) {
+  .radio-grid { grid-template-columns: 1fr !important; }
+  .radio-option { min-height: 62px !important; padding: 14px 16px !important; }
+  .input-grid, .skill-select-grid { grid-template-columns: 1fr !important; }
+}
+
+/* =========================================================
+   CAREVO FINAL FORM FIX - language, skill, light mode, mobile
+   ========================================================= */
+.carevo-form.light,
+.carevo-form.light .form-main,
+.carevo-form.light .form-content {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+.carevo-form.light .form-card,
+.carevo-form.light .profile-card-custom,
+.carevo-form.light .experience-card,
+.carevo-form.light .language-card,
+.carevo-form.light .skill-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08) !important;
+  color: #0f172a !important;
+}
+
+.carevo-form.light input,
+.carevo-form.light textarea,
+.carevo-form.light select,
+.carevo-form.light .searchable-select-box,
+.carevo-form.light .language-input-with-flag,
+.carevo-form.light .language-custom-select {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border: 1px solid #cbd5e1 !important;
+  box-shadow: none !important;
+}
+
+.carevo-form.light input::placeholder,
+.carevo-form.light textarea::placeholder,
+.carevo-form.light .searchable-select-box input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.carevo-form.light select option,
+.carevo-form.light .searchable-dropdown,
+.carevo-form.light .searchable-option {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+.carevo-form.light .searchable-option:hover,
+.carevo-form.light .searchable-option.active,
+.carevo-form.light .searchable-option.selected {
+  background: #eef2ff !important;
+  color: #312e81 !important;
+}
+
+.carevo-form .radio-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+
+.carevo-form .radio-option {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 48px !important;
+  padding: 12px 14px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+  background: rgba(255,255,255,0.06) !important;
+  white-space: normal !important;
+  overflow: hidden !important;
+  cursor: pointer !important;
+}
+
+.carevo-form.light .radio-option {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+.carevo-form .radio-option input {
+  width: 16px !important;
+  min-width: 16px !important;
+  height: 16px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  accent-color: #8b5cf6 !important;
+}
+
+.carevo-form .radio-label-text {
+  display: block !important;
+  font-size: 0.9rem !important;
+  line-height: 1.25 !important;
+}
+
+.carevo-form .language-flag-preview,
+.carevo-form .language-option-flag,
+.carevo-form .language-flag-img {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 7px !important;
+  padding: 2px !important;
+  object-fit: cover !important;
+}
+
+.carevo-form .skill-option-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) !important;
+  gap: 12px !important;
+}
+
+.carevo-form .skill-option,
+.carevo-form.light .skill-option {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+  min-height: 48px !important;
+}
+
+.carevo-form.dark .skill-option {
+  background: rgba(15, 23, 42, 0.7) !important;
+  color: #f8fafc !important;
+  border-color: rgba(148, 163, 184, 0.32) !important;
+}
+
+.carevo-form .skill-option.active {
+  background: linear-gradient(135deg, #7c3aed, #2563eb) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+}
+
+.carevo-form .input-grid,
+.carevo-form .profile-row,
+.carevo-form .language-editor-grid,
+.carevo-form .language-form-grid,
+.carevo-form .skill-select-grid {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.carevo-form input,
+.carevo-form textarea,
+.carevo-form select {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 768px) {
+  .carevo-form .form-main {
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+
+  .carevo-form .form-content {
+    padding: 78px 14px 28px !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .carevo-form .form-card,
+  .carevo-form .profile-card-custom,
+  .carevo-form .experience-card,
+  .carevo-form .language-card,
+  .carevo-form .skill-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .carevo-form .card-body {
+    padding: 18px !important;
+  }
+
+  .carevo-form .input-grid,
+  .carevo-form .profile-row,
+  .carevo-form .skill-select-grid,
+  .carevo-form .language-editor-grid,
+  .carevo-form .language-form-grid,
+  .carevo-form .experience-card .input-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .carevo-form .step-progress {
+    overflow-x: auto !important;
+    padding-bottom: 10px !important;
+  }
+
+  .carevo-form .radio-grid,
+  .carevo-form .skill-option-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .carevo-form .form-bottom-actions {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .carevo-form .form-bottom-actions button {
+    width: 100% !important;
+  }
+}
+
+
+/* === CAREVO EMERGENCY FINAL PATCH: skill direct route + date calendar icon + native control polish === */
+.carevo-form input[type="date"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  height: 56px !important;
+  min-height: 56px !important;
+  padding: 0 54px 0 16px !important;
+  background-repeat: no-repeat !important;
+  background-position: right 18px center !important;
+  background-size: 21px 21px !important;
+  cursor: pointer !important;
+}
+.carevo-form.dark input[type="date"] {
+  color-scheme: dark !important;
+  background-color: #08111f !important;
+  color: #f8fafc !important;
+  border-color: #22304a !important;
+  background-image: url("data:image/svg+xml,%3Csvg width='22' height='22' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='3.5' y='5.5' width='17' height='15' rx='2.5' stroke='%23E5EDFF' stroke-width='2'/%3E%3Cpath d='M8 3.5V7.5M16 3.5V7.5M4 10H20' stroke='%23E5EDFF' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+}
+.carevo-form.light input[type="date"] {
+  color-scheme: light !important;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+  background-image: url("data:image/svg+xml,%3Csvg width='22' height='22' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='3.5' y='5.5' width='17' height='15' rx='2.5' stroke='%230F172A' stroke-width='2'/%3E%3Cpath d='M8 3.5V7.5M16 3.5V7.5M4 10H20' stroke='%230F172A' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+}
+.carevo-form input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0 !important;
+  display: block !important;
+  cursor: pointer !important;
+  width: 46px !important;
+  height: 46px !important;
+  margin-right: -44px !important;
+  padding: 0 !important;
+}
+.carevo-form .skill-wrapper,
+.carevo-form .skill-card {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+.carevo-form .skill-option-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+  gap: 12px !important;
+}
+.carevo-form .skill-option {
+  min-height: 52px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 12px 14px !important;
+  border-radius: 14px !important;
+  text-align: left !important;
+}
+.carevo-form .skill-check {
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  border-radius: 7px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid rgba(148, 163, 184, .45) !important;
+}
+.carevo-form .skill-option.active .skill-check {
+  background: #22c55e !important;
+  border-color: #22c55e !important;
+  color: #ffffff !important;
+}
+.carevo-form.light .skill-option:not(.active) {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+.carevo-form.dark .skill-option:not(.active) {
+  background: #08111f !important;
+  color: #f8fafc !important;
+  border-color: #22304a !important;
+}
+.carevo-form .selected-skill-list {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+}
+.carevo-form .selected-skill-chip {
+  width: auto !important;
+  max-width: 100% !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+/* === CAREVO FINAL POLISH: native select chevron + consistent light/dark + date icons === */
+.carevo-form select,
+.carevo-form .form-select,
+.carevo-form .field-select,
+.carevo-form .select-input {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L7 7.5L13 1.5' stroke='%239bb4d6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 18px center !important;
+  background-size: 14px 9px !important;
+  padding-right: 52px !important;
+}
+
+.carevo-form.light select,
+.carevo-form.light .form-select,
+.carevo-form.light .field-select,
+.carevo-form.light .select-input {
+  background-color: #ffffff !important;
+  color: #071426 !important;
+  border-color: #cfe0f5 !important;
+}
+
+.carevo-form.dark select,
+.carevo-form.dark .form-select,
+.carevo-form.dark .field-select,
+.carevo-form.dark .select-input {
+  background-color: #07111f !important;
+  color: #ffffff !important;
+  border-color: #223654 !important;
+}
+
+.carevo-form select option {
+  background-color: #07111f;
+  color: #ffffff;
+}
+
+.carevo-form.light select option {
+  background-color: #ffffff;
+  color: #071426;
+}
+
+.carevo-form input[type="date"] {
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+  color-scheme: dark;
+}
+
+.carevo-form.light input[type="date"] {
+  color-scheme: light;
+}
+
+.carevo-form input[type="date"]::-webkit-calendar-picker-indicator {
+  display: block !important;
+  opacity: 1 !important;
+  cursor: pointer;
+  filter: invert(85%) sepia(12%) saturate(707%) hue-rotate(178deg) brightness(97%) contrast(92%);
+}
+
+.carevo-form.light input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(31%) sepia(17%) saturate(764%) hue-rotate(176deg) brightness(92%) contrast(88%);
+}
+
+.carevo-form .proficiency-grid,
+.carevo-form .language-proficiency-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+}
+
+.carevo-form .proficiency-option,
+.carevo-form .language-proficiency-option {
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.carevo-form .proficiency-option span,
+.carevo-form .language-proficiency-option span,
+.carevo-form .proficiency-option label,
+.carevo-form .language-proficiency-option label {
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+}
+
+@media (max-width: 640px) {
+  .carevo-form .proficiency-grid,
+  .carevo-form .language-proficiency-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
