@@ -301,6 +301,26 @@ function formatRange(startDate, endDate, currentLabel) {
   return "Periode belum diisi";
 }
 
+function skillListText(value) {
+  const list = Array.isArray(value) ? value : value ? [value] : [];
+
+  return list
+    .map((item) => {
+      if (typeof item === "string" || typeof item === "number") return String(item);
+      return (
+        item?.name ||
+        item?.skillName ||
+        item?.title ||
+        item?.label ||
+        item?.value ||
+        ""
+      );
+    })
+    .map((item) => String(item || "").trim())
+    .filter(Boolean)
+    .join(", ");
+}
+
 function GenerateCV({ formData, notify, aiRecommendation }) {
   const [fileName, setFileName] = useState("CAREVO_CV.pdf");
   const [latestFormData, setLatestFormData] = useState(formData || {});
@@ -326,6 +346,13 @@ function GenerateCV({ formData, notify, aiRecommendation }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const refresh = () => loadLatestCvData();
+    window.addEventListener('focus', refresh);
+    return () => window.removeEventListener('focus', refresh);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const formSource = latestFormData || formData || {};
 
   const profile = useMemo(() => getProfile(formSource), [formSource]);
@@ -339,16 +366,19 @@ function GenerateCV({ formData, notify, aiRecommendation }) {
   const fullName =
     profile.fullName || profile.name || formSource?.fullName || "CAREVO USER";
 
+  // CV harus mengikuti Headline/Professional Title terbaru dari profile.
+  // careerInterest biasanya berisi kategori AI, jadi posisinya dibuat fallback saja.
   const careerInterest =
-    profile.careerInterest ||
     profile.professionalTitle ||
+    profile.headline ||
     profile.jobTitle ||
     profile.title ||
+    profile.careerInterest ||
     experiences[0]?.jobTitle ||
     "CAREER PROFILE";
 
-  const email = profile.email || formSource?.email || "email@example.com";
-  const phone = profile.phone || formSource?.phone || "+62 812 0000 0000";
+  const email = profile.email || formSource?.email || "";
+  const phone = profile.phone || formSource?.phone || "";
   const location = profile.location || formSource?.location || "Indonesia";
   const summary =
     profile.shortBio ||
@@ -504,24 +534,6 @@ function GenerateCV({ formData, notify, aiRecommendation }) {
               </div>
             </div>
 
-            <div className="ats-box ai-cv-summary-box">
-              <div>
-                <Icon name="sparkle" />
-              </div>
-
-              <div>
-                <strong>AI Career Match</strong>
-                <p>{aiRecommendation?.recommendedCategory ? `${aiRecommendation.recommendedCategory} • ${aiRecommendation.matchScore || Math.round((aiRecommendation.confidence || 0) * 100) || 0}% match` : 'AI recommendation akan muncul setelah dashboard membaca data terbaru.'}</p>
-                {aiRecommendation?.topPathMatches?.length ? (
-                  <ul>
-                    {aiRecommendation.topPathMatches.slice(0, 3).map((path, index) => (
-                      <li key={`${path.name}-${index}`}>{path.name} — {path.score}%</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </div>
-            </div>
-
             <div className="ats-box">
               <div>
                 <Icon name="sparkle" />
@@ -543,9 +555,9 @@ function GenerateCV({ formData, notify, aiRecommendation }) {
                   <div>
                     <h1>{fullName}</h1>
                     <h3>{careerInterest}</h3>
-                    <p>{phone}</p>
-                    <p>{email}</p>
-                    <p>{location}</p>
+                    {phone ? <p>{phone}</p> : null}
+                    {email ? <p>{email}</p> : null}
+                    {location ? <p>{location}</p> : null}
                   </div>
 
                   <div className="cv-photo">
@@ -566,21 +578,6 @@ function GenerateCV({ formData, notify, aiRecommendation }) {
                   <p>{summary}</p>
                 </section>
               </>
-            )}
-
-            {aiRecommendation?.recommendedCategory && (
-              <section className="cv-ai-section">
-                <h2>AI CAREER MATCH</h2>
-                <p><strong>{aiRecommendation.recommendedCategory}</strong> — {aiRecommendation.matchScore || Math.round((aiRecommendation.confidence || 0) * 100) || 0}% match</p>
-                {aiRecommendation.reason && <p>{aiRecommendation.reason}</p>}
-                {aiRecommendation.topPathMatches?.length ? (
-                  <ul>
-                    {aiRecommendation.topPathMatches.slice(0, 3).map((path, index) => (
-                      <li key={`${path.name}-${index}`}>{path.name} — {path.score}%</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </section>
             )}
 
             {include.experience && cvStatus.experience && (

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getSkillList, getSkillPercent } from './helpers';
 
 const emptySkill = {
@@ -52,15 +52,84 @@ const normalizeSkillList = (formData = {}) => {
 };
 
 function SkillIcon({ type }) {
-  if (type === 'Design') return <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18h1.2a1.8 1.8 0 0 0 .6-3.5l-.8-.3a1.5 1.5 0 0 1 .5-2.9H15a6 6 0 0 0 0-12h-3Z"/><circle cx="7.5" cy="10" r=".7"/><circle cx="10" cy="7" r=".7"/><circle cx="14" cy="7" r=".7"/></svg>;
-  if (type === 'Soft Skill') return <svg viewBox="0 0 24 24"><path d="M7 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M17 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/><path d="M3 21a6 6 0 0 1 12 0"/><path d="M13 21a6 6 0 0 1 8-5.6"/></svg>;
-  if (type === 'Business') return <svg viewBox="0 0 24 24"><path d="M9 7V5.8C9 4.8 9.8 4 10.8 4h2.4c1 0 1.8.8 1.8 1.8V7"/><path d="M4 7h16v12H4V7Z"/><path d="M4 12h16"/></svg>;
-  if (type === 'Data') return <svg viewBox="0 0 24 24"><path d="M4 6c0-1.1 3.6-2 8-2s8 .9 8 2-3.6 2-8 2-8-.9-8-2Z"/><path d="M4 6v6c0 1.1 3.6 2 8 2s8-.9 8-2V6"/><path d="M4 12v6c0 1.1 3.6 2 8 2s8-.9 8-2v-6"/></svg>;
-  if (type === 'Language') return <svg viewBox="0 0 24 24"><path d="M4 5h10"/><path d="M9 5c-.3 4.6-2.1 7.9-5 10"/><path d="M6.5 9.5c1.2 2.1 3.1 4 5.5 5.5"/><path d="M14 20l4-9 4 9"/><path d="M15.5 17h5"/></svg>;
-  if (type === 'save') return <svg viewBox="0 0 24 24"><path d="M5 4h12l2 2v14H5V4Z"/><path d="M8 4v6h8V4"/><path d="M8 20v-6h8v6"/></svg>;
-  if (type === 'x') return <svg viewBox="0 0 24 24"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg>;
-  if (type === 'trash') return <svg viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 14h10l1-14"/><path d="M9 7V4h6v3"/></svg>;
-  return <svg viewBox="0 0 24 24"><path d="m8 9-4 3 4 3"/><path d="m16 9 4 3-4 3"/><path d="m14 4-4 16"/></svg>;
+  if (type === 'Design') return <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18h1.2a1.8 1.8 0 0 0 .6-3.5l-.8-.3a1.5 1.5 0 0 1 .5-2.9H15a6 6 0 0 0 0-12h-3Z" /><circle cx="7.5" cy="10" r=".7" /><circle cx="10" cy="7" r=".7" /><circle cx="14" cy="7" r=".7" /></svg>;
+  if (type === 'Soft Skill') return <svg viewBox="0 0 24 24"><path d="M7 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" /><path d="M17 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" /><path d="M3 21a6 6 0 0 1 12 0" /><path d="M13 21a6 6 0 0 1 8-5.6" /></svg>;
+  if (type === 'Business') return <svg viewBox="0 0 24 24"><path d="M9 7V5.8C9 4.8 9.8 4 10.8 4h2.4c1 0 1.8.8 1.8 1.8V7" /><path d="M4 7h16v12H4V7Z" /><path d="M4 12h16" /></svg>;
+  if (type === 'Data') return <svg viewBox="0 0 24 24"><path d="M4 6c0-1.1 3.6-2 8-2s8 .9 8 2-3.6 2-8 2-8-.9-8-2Z" /><path d="M4 6v6c0 1.1 3.6 2 8 2s8-.9 8-2V6" /><path d="M4 12v6c0 1.1 3.6 2 8 2s8-.9 8-2v-6" /></svg>;
+  if (type === 'Language') return <svg viewBox="0 0 24 24"><path d="M4 5h10" /><path d="M9 5c-.3 4.6-2.1 7.9-5 10" /><path d="M6.5 9.5c1.2 2.1 3.1 4 5.5 5.5" /><path d="M14 20l4-9 4 9" /><path d="M15.5 17h5" /></svg>;
+  if (type === 'save') return <svg viewBox="0 0 24 24"><path d="M5 4h12l2 2v14H5V4Z" /><path d="M8 4v6h8V4" /><path d="M8 20v-6h8v6" /></svg>;
+  if (type === 'x') return <svg viewBox="0 0 24 24"><path d="M6 6l12 12" /><path d="M18 6 6 18" /></svg>;
+  if (type === 'trash') return <svg viewBox="0 0 24 24"><path d="M4 7h16" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M6 7l1 14h10l1-14" /><path d="M9 7V4h6v3" /></svg>;
+  return <svg viewBox="0 0 24 24"><path d="m8 9-4 3 4 3" /><path d="m16 9 4 3-4 3" /><path d="m14 4-4 16" /></svg>;
+}
+
+
+function SearchableSelect({ label, value, options, placeholder, onChange, className = '' }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState(value || '');
+  const wrapRef = useRef(null);
+
+  useEffect(() => {
+    setQuery(value || '');
+  }, [value]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!wrapRef.current?.contains(event.target)) setOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const filtered = options.filter((item) =>
+    item.toLowerCase().includes(String(query || '').toLowerCase())
+  );
+
+  const choose = (item) => {
+    onChange(item);
+    setQuery(item);
+    setOpen(false);
+  };
+
+  const handleTyping = (event) => {
+    const next = event.target.value;
+    setQuery(next);
+    onChange(next);
+    setOpen(true);
+  };
+
+  return (
+    <label className={`dash-field skill-combo-field ${className}`} ref={wrapRef}>
+      <span>{label}</span>
+      <div className={`skill-combo ${open ? 'open' : ''}`}>
+        <input
+          type="text"
+          value={query}
+          placeholder={placeholder}
+          onFocus={() => setOpen(true)}
+          onChange={handleTyping}
+        />
+        <button type="button" className="skill-combo-arrow" onClick={() => setOpen((prev) => !prev)} aria-label={`Open ${label}`}>
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+        </button>
+      </div>
+      {open && (
+        <div className="skill-combo-menu">
+          {(filtered.length ? filtered : options).map((item) => (
+            <button
+              type="button"
+              key={item}
+              className={item.toLowerCase() === String(value || '').toLowerCase() ? 'active' : ''}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => choose(item)}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      )}
+    </label>
+  );
 }
 
 function SkillGroup({ title, skills, onDelete }) {
@@ -73,12 +142,11 @@ function SkillGroup({ title, skills, onDelete }) {
 
       <div className="skill-display-list">
         {skills.length ? skills.map((skill, index) => (
-          <div className="skill-display-row" key={`${title}-${skill.name}-${index}`}>
-            <div>
-              <span>{skill.name}</span>
-              <em>{skill.category} • {skill.level || 'Basic'}</em>
+          <div className="skill-display-row no-progress" key={`${title}-${skill.name}-${index}`}>
+            <div className="skill-display-info">
+              <span className="skill-display-name">{skill.name}</span>
+              <em className="skill-display-level">{skill.level || 'Basic'}</em>
             </div>
-            <b><i style={{ width: `${getSkillPercent(skill.level)}%` }} /></b>
             <button type="button" className="skill-delete-btn" onClick={() => onDelete(skill.name)} aria-label={`Delete ${skill.name}`}><SkillIcon type="trash" /></button>
           </div>
         )) : <p className="empty-skill-text">Belum ada skill di kategori {title}.</p>}
@@ -159,10 +227,32 @@ function Skill({ formData = {}, setFormData, notify }) {
             <button type="button" className="form-close-btn" onClick={resetForm}><SkillIcon type="x" /></button>
           </div>
 
-          <div className="dashboard-two-col-form">
-            <label className="dash-field"><span>Skill Name</span><input value={draft.name} placeholder="e.g. Microsoft Excel" onChange={(e) => setDraft((prev) => ({ ...prev, name: e.target.value }))} /></label>
-            <label className="dash-field"><span>Category</span><select value={draft.category} onChange={(e) => setDraft((prev) => ({ ...prev, category: e.target.value }))}>{categoryOptions.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
-            <label className="dash-field form-full"><span>Level</span><select value={draft.level} onChange={(e) => setDraft((prev) => ({ ...prev, level: e.target.value }))}>{levelOptions.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+          <div className="dashboard-two-col-form skill-add-grid-fixed">
+            <label className="dash-field">
+              <span>Skill Name</span>
+              <input
+                value={draft.name}
+                placeholder="e.g. Microsoft Excel"
+                onChange={(e) => setDraft((prev) => ({ ...prev, name: e.target.value }))}
+              />
+            </label>
+
+            <SearchableSelect
+              label="Category"
+              value={draft.category}
+              options={categoryOptions}
+              placeholder="Type or select category..."
+              onChange={(value) => setDraft((prev) => ({ ...prev, category: value }))}
+            />
+
+            <SearchableSelect
+              label="Level"
+              value={draft.level}
+              options={levelOptions}
+              placeholder="Type or select level..."
+              className="form-full"
+              onChange={(value) => setDraft((prev) => ({ ...prev, level: value }))}
+            />
           </div>
 
           <div className="dashboard-form-actions">

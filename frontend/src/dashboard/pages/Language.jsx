@@ -1,20 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getLanguageList } from "./helpers";
 
 const languageOptions = [
-  { name: "English", countryCode: "us" },
-  { name: "Indonesian", countryCode: "id" },
-  { name: "Mandarin Chinese", countryCode: "cn" },
-  { name: "Japanese", countryCode: "jp" },
-  { name: "Korean", countryCode: "kr" },
-  { name: "Spanish", countryCode: "es" },
-  { name: "French", countryCode: "fr" },
-  { name: "Arabic", countryCode: "sa" },
-  { name: "German", countryCode: "de" },
+  { name: "English", countryCode: "us", aliases: ["en", "eng"] },
+  { name: "Indonesian", countryCode: "id", aliases: ["id", "indonesia", "bahasa indonesia"] },
+  { name: "Mandarin Chinese", countryCode: "cn", aliases: ["cn", "zh", "chinese", "mandarin"] },
+  { name: "Japanese", countryCode: "jp", aliases: ["jp", "ja"] },
+  { name: "Korean", countryCode: "kr", aliases: ["kr", "ko"] },
+  { name: "Spanish", countryCode: "es", aliases: ["es", "esp"] },
+  { name: "French", countryCode: "fr", aliases: ["fr"] },
+  { name: "Arabic", countryCode: "sa", aliases: ["ar", "arab"] },
+  { name: "German", countryCode: "de", aliases: ["de"] },
   { name: "Dutch", countryCode: "nl" },
   { name: "Portuguese", countryCode: "pt" },
-  { name: "Italian", countryCode: "it" },
-  { name: "Russian", countryCode: "ru" },
+  { name: "Italian", countryCode: "it", aliases: ["it"] },
+  { name: "Russian", countryCode: "ru", aliases: ["ru"] },
   { name: "Thai", countryCode: "th" },
   { name: "Vietnamese", countryCode: "vn" },
   { name: "Malay", countryCode: "my" },
@@ -31,7 +31,7 @@ const languageOptions = [
   { name: "Hebrew", countryCode: "il" },
   { name: "Czech", countryCode: "cz" },
   { name: "Swedish", countryCode: "se" },
-  { name: "Norwegian", countryCode: "no" },
+  { name: "Norwegian", countryCode: "no", aliases: ["no", "nb", "nn"] },
   { name: "Danish", countryCode: "dk" },
   { name: "Finnish", countryCode: "fi" },
   { name: "Acehnese", countryCode: "id" },
@@ -85,9 +85,23 @@ function normalizeLanguageItem(item = {}) {
   };
 }
 
+function getLanguageOption(value) {
+  const keyword = String(value || "").trim().toLowerCase();
+  if (!keyword) return null;
+
+  return languageOptions.find((item) => {
+    const aliases = item.aliases || [];
+    return (
+      item.name.toLowerCase() === keyword ||
+      item.countryCode.toLowerCase() === keyword ||
+      aliases.some((alias) => alias.toLowerCase() === keyword)
+    );
+  }) || null;
+}
+
 function getFlagUrl(languageName) {
-  const selectedLanguage = languageOptions.find(
-    (item) => item.name.toLowerCase() === languageName?.trim().toLowerCase()
+  const selectedLanguage = getLanguageOption(languageName) || languageOptions.find(
+    (item) => item.name.toLowerCase().includes(String(languageName || "").trim().toLowerCase())
   );
 
   if (!selectedLanguage?.countryCode) {
@@ -95,6 +109,10 @@ function getFlagUrl(languageName) {
   }
 
   return `https://flagcdn.com/w80/${selectedLanguage.countryCode}.png`;
+}
+
+function getCanonicalLanguageName(value) {
+  return getLanguageOption(value)?.name || String(value || "").trim();
 }
 
 function getPercent(proficiency) {
@@ -250,6 +268,7 @@ function Language({ formData, setFormData, notify }) {
   const [showForm, setShowForm] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(emptyLanguage);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const languageSelectRef = useRef(null);
   const [sortMode, setSortMode] = useState("proficiency");
   const [languages, setLanguages] = useState(() =>
     getLanguageList(formData).map(normalizeLanguageItem)
@@ -259,14 +278,30 @@ function Language({ formData, setFormData, notify }) {
     setLanguages(getLanguageList(formData).map(normalizeLanguageItem));
   }, [formData]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!languageSelectRef.current?.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const filteredLanguages = useMemo(() => {
     const keyword = currentLanguage.language.trim().toLowerCase();
 
     if (!keyword) return languageOptions;
 
-    return languageOptions.filter((item) =>
-      item.name.toLowerCase().includes(keyword)
-    );
+    return languageOptions.filter((item) => {
+      const aliases = item.aliases || [];
+      return (
+        item.name.toLowerCase().includes(keyword) ||
+        item.countryCode.toLowerCase().includes(keyword) ||
+        aliases.some((alias) => alias.toLowerCase().includes(keyword))
+      );
+    });
   }, [currentLanguage.language]);
 
   const sortedLanguages = useMemo(
@@ -322,10 +357,12 @@ function Language({ formData, setFormData, notify }) {
       return;
     }
 
+    const canonicalLanguage = getCanonicalLanguageName(currentLanguage.language);
+
     const newLanguage = normalizeLanguageItem({
       ...currentLanguage,
       id: Date.now(),
-      language: currentLanguage.language.trim(),
+      language: canonicalLanguage,
     });
 
     const nextLanguages = [newLanguage, ...languages.filter(
@@ -355,9 +392,9 @@ function Language({ formData, setFormData, notify }) {
       ...prev,
       languages: nextLanguages[0]
         ? {
-            ...nextLanguages[0],
-            proficiency: denormalizeProficiency(nextLanguages[0].proficiency),
-          }
+          ...nextLanguages[0],
+          proficiency: denormalizeProficiency(nextLanguages[0].proficiency),
+        }
         : emptyLanguage,
       languageList: nextLanguages,
       languagesList: nextLanguages,
@@ -453,8 +490,11 @@ function Language({ formData, setFormData, notify }) {
             <div className="dash-field">
               <label>Language</label>
 
-              <div className="language-custom-select">
-                <div className="language-input-with-flag">
+              <div className="language-custom-select fixed-language-select" ref={languageSelectRef}>
+                <div
+                  className={`language-input-with-flag ${isDropdownOpen ? "open" : ""}`}
+                  onMouseDown={() => setIsDropdownOpen(true)}
+                >
                   <span>
                     <img
                       src={getFlagUrl(currentLanguage.language)}
@@ -476,7 +516,10 @@ function Language({ formData, setFormData, notify }) {
 
                   <button
                     type="button"
+                    className="language-dropdown-arrow"
+                    onMouseDown={(event) => event.preventDefault()}
                     onClick={() => setIsDropdownOpen((prev) => !prev)}
+                    aria-label="Open language options"
                   >
                     <Icon name="chevron" />
                   </button>
@@ -489,6 +532,7 @@ function Language({ formData, setFormData, notify }) {
                         <button
                           type="button"
                           key={language.name}
+                          onMouseDown={(event) => event.preventDefault()}
                           onClick={() => {
                             updateLanguage("language", language.name);
                             setIsDropdownOpen(false);

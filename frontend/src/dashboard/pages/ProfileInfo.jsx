@@ -120,7 +120,7 @@ function ProfileInfo({ formData = {}, setFormData, notify }) {
 
       <div className="profile-two-grid">
         <div className="profile-box"><h2><Icon name="user" /> About Me</h2><textarea className="profile-bio-edit" value={draft.shortBio || ''} placeholder="Lengkapi bio singkat agar profil terlihat lebih profesional." onChange={(event) => update('shortBio', event.target.value)} /></div>
-        <div className="profile-box"><h2><Icon name="mail" /> Contact Information</h2><p>{draft.location || 'Location not set'}</p><p>{draft.email || 'Email belum diisi'}</p><p>{draft.phone || 'Nomor HP belum diisi'}</p></div>
+        <div className="profile-box"><h2><Icon name="mail" /> Contact Information</h2>{draft.location ? <p>{draft.location}</p> : <p>Location belum diisi</p>}{draft.email ? <p>{draft.email}</p> : <p>Email belum diisi</p>}{draft.phone ? <p>{draft.phone}</p> : null}</div>
       </div>
 
       <div className="profile-bottom-grid">

@@ -1,24 +1,18 @@
 # CAREVO
 
-CAREVO adalah aplikasi web berbasis AI untuk membantu pengguna membuat profil karier, mengisi data pengalaman, pendidikan, skill, project, certification, dan language, lalu mendapatkan rekomendasi career path serta generate CV otomatis berdasarkan data terbaru user.
+CAREVO adalah aplikasi web berbasis AI untuk membantu user membuat profil karier, mengisi personal info, experience, education, skills, projects, certifications, dan languages, lalu mendapatkan rekomendasi career path dari model AI serta generate CV PDF/DOCX dari data terbaru.
 
 ## Features
 
 - User Authentication Login/Register
-- Personal Profile Management
-- Experience Management
-- Education Management
-- Skills Management
-- Projects Management
-- Certifications Management
-- Languages Management
+- Personal Info, Experience, Education, Skills, Projects, Certifications, Languages
 - Dashboard Career Profile
 - AI Match Score
-- Top 3 Career Path Recommendation
-- TensorFlow AI Career Recommendation
+- Top 3 Career Path Matches
+- TensorFlow/FastAPI Career Recommendation
 - Generate CV PDF/DOCX
-- PostgreSQL Database Integration
-- RESTful API with Express.js
+- PostgreSQL Database
+- Express RESTful API
 
 ## Tech Stack
 
@@ -28,7 +22,6 @@ CAREVO adalah aplikasi web berbasis AI untuk membantu pengguna membuat profil ka
 - Vite
 - Bootstrap
 - CSS
-- JavaScript
 
 ### Backend
 
@@ -36,8 +29,8 @@ CAREVO adalah aplikasi web berbasis AI untuk membantu pengguna membuat profil ka
 - Express.js
 - PostgreSQL
 - JWT Authentication
-- RESTful API
-- PDF/DOCX Generator
+- PDFKit
+- DOCX
 
 ### AI Service
 
@@ -45,35 +38,20 @@ CAREVO adalah aplikasi web berbasis AI untuk membantu pengguna membuat profil ka
 - TensorFlow
 - FastAPI
 - Uvicorn
-- NumPy
-- Pandas
 - Scikit-learn
+- python-docx
 
-## Getting Started
+## Struktur Project
 
-### Prerequisites
-
-Pastikan sudah menginstall:
-
-- Node.js
-- npm
-- Python 3.10 atau 3.11
-- PostgreSQL
-- Git
-- VS Code
-
-## Installation
-
-### 1. Clone Repository
-
-```bash
-git clone https://github.com/USERNAME/CAREVO.git
-cd CAREVO
+```txt
+CAREVO-CAPSTONE-PROJECT/
+├── ai-service/
+├── backend/
+├── frontend/
+└── README.md
 ```
 
-Ganti `USERNAME` dengan username GitHub kamu.
-
-### 2. Setup PostgreSQL Database
+## 1. Setup Database PostgreSQL
 
 Masuk PostgreSQL:
 
@@ -94,7 +72,71 @@ ALTER SCHEMA public OWNER TO carevoo;
 \q
 ```
 
-### 3. Setup Backend
+## 2. Jalankan AI Service
+
+Masuk folder AI:
+
+```bash
+cd ai-service
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
+
+Cek AI service:
+
+```txt
+http://localhost:8000/health
+```
+
+Jika berhasil, akan muncul `modelLoaded: true` dan `labelLoaded: true`.
+
+### Endpoint AI
+
+AI service punya endpoint utama sesuai API model:
+
+```txt
+POST /predict
+```
+
+Body:
+
+```json
+{
+  "skills_text": "Saya memiliki pengalaman python sql data analysis machine learning tensorflow"
+}
+```
+
+Response berisi rekomendasi karier:
+
+```json
+{
+  "success": true,
+  "prediction": "Data & AI",
+  "recommendedCategory": "Data & AI",
+  "matchScore": 98,
+  "topPathMatches": [
+    { "name": "Data Scientist", "score": 98 },
+    { "name": "Data Analyst", "score": 94 },
+    { "name": "Machine Learning Engineer", "score": 90 }
+  ]
+}
+```
+
+Swagger UI:
+
+```txt
+http://localhost:8000/docs
+```
+
+Kalau memakai API ngrok dari AI, ubah `AI_SERVICE_URL` di backend `.env`, contoh:
+
+```env
+AI_SERVICE_URL=https://arrogance-gentile-busboy.ngrok-free.dev
+```
+
+## 3. Setup Backend
 
 Masuk folder backend:
 
@@ -103,7 +145,7 @@ cd backend
 npm install
 ```
 
-Buat file `.env` di dalam folder `backend`:
+Buat file `.env` dari `.env.example`, lalu pastikan isinya seperti ini:
 
 ```env
 PORT=5000
@@ -133,7 +175,7 @@ JWT_REFRESH_TOKEN_EXPIRES_IN=30d
 
 AI_SERVICE_URL=http://localhost:8000
 USE_TENSORFLOW_AI=true
-AI_SERVICE_TIMEOUT_MS=7000
+AI_SERVICE_TIMEOUT_MS=10000
 ```
 
 Jalankan migration:
@@ -154,63 +196,9 @@ Backend berjalan di:
 http://localhost:5000
 ```
 
-### 4. Setup AI Service TensorFlow
+## 4. Setup Frontend
 
-Buka terminal baru, lalu masuk folder AI service:
-
-```bash
-cd ai-service
-```
-
-Buat virtual environment:
-
-```bash
-python -m venv venv
-```
-
-Aktifkan virtual environment:
-
-```bash
-venv\Scripts\activate
-```
-
-Install dependency:
-
-```bash
-pip install -r requirements.txt
-```
-
-Jalankan AI service:
-
-```bash
-uvicorn main:app --reload --port 8000
-```
-
-AI service berjalan di:
-
-```txt
-http://localhost:8000
-```
-
-Cek status AI:
-
-```txt
-http://localhost:8000/health
-```
-
-Jika berhasil, akan muncul:
-
-```json
-{
-  "success": true,
-  "modelLoaded": true,
-  "labelLoaded": true
-}
-```
-
-### 5. Setup Frontend
-
-Buka terminal baru, lalu masuk folder frontend:
+Buka terminal baru:
 
 ```bash
 cd frontend
@@ -224,20 +212,20 @@ Frontend berjalan di:
 http://localhost:5173
 ```
 
-## Application Flow
+## Alur Aplikasi
 
-1. User melakukan register atau login.
-2. User mengisi form profile, experience, education, skills, project, certification, dan language.
-3. Data disimpan ke PostgreSQL berdasarkan akun user.
-4. Backend mengambil data terbaru user dari database.
-5. Backend mengirim data user ke AI TensorFlow service.
-6. TensorFlow memberikan rekomendasi career path dan match score.
-7. Dashboard menampilkan AI Match Score dan Top 3 Career Path Matches.
-8. User dapat generate CV PDF/DOCX berdasarkan data terbaru dan hasil rekomendasi AI.
+1. User register/login.
+2. User mengisi form wajib: personal info, experience, education, skills.
+3. Project, certification, dan language bersifat optional.
+4. Data tersimpan ke PostgreSQL berdasarkan akun user.
+5. Dashboard memanggil backend.
+6. Backend mengambil data terbaru dari PostgreSQL.
+7. Backend mengirim gabungan data user ke AI service `/predict` dalam format `skills_text`.
+8. AI mengembalikan kategori karier, match score, dan top 3 path matches.
+9. Dashboard menampilkan AI Match Score.
+10. Generate CV PDF/DOCX memakai data terbaru dan hasil AI recommendation.
 
-## Main Routes
-
-### Frontend
+## Route Frontend
 
 ```txt
 /
@@ -261,49 +249,12 @@ http://localhost:5173
 /dashboard/generate-cv
 ```
 
-### Backend API
+## API Backend
 
 ```txt
 POST /api/auth/register
 POST /api/auth/login
 GET  /api/auth/me
-
-GET    /api/profile
-POST   /api/profile
-PUT    /api/profile
-
-GET    /api/experiences
-POST   /api/experiences
-PUT    /api/experiences/:id
-DELETE /api/experiences/:id
-
-GET    /api/educations
-POST   /api/educations
-PUT    /api/educations/:id
-DELETE /api/educations/:id
-
-GET    /api/skills
-POST   /api/skills
-PUT    /api/skills/:id
-DELETE /api/skills/:id
-
-GET    /api/projects
-POST   /api/projects
-PUT    /api/projects/:id
-DELETE /api/projects/:id
-
-GET    /api/certifications
-POST   /api/certifications
-PUT    /api/certifications/:id
-DELETE /api/certifications/:id
-
-GET    /api/languages
-POST   /api/languages
-PUT    /api/languages/:id
-DELETE /api/languages/:id
-
-GET  /api/dashboard/summary
-GET  /api/dashboard/completeness
 
 GET  /api/cv/data
 POST /api/cv/generate-pdf
@@ -312,45 +263,30 @@ POST /api/cv/generate-docx
 POST /api/career/recommendation
 ```
 
-## Project Structure
+## GitHub Notes
+
+Jangan push folder berikut:
 
 ```txt
-CAREVO/
-├── frontend/
-│   ├── src/
-│   ├── public/
-│   └── package.json
-│
-├── backend/
-│   ├── src/
-│   ├── migrations/
-│   ├── package.json
-│   └── .env
-│
-├── ai-service/
-│   ├── main.py
-│   ├── requirements.txt
-│   └── model/
-│       ├── career_model.keras
-│       └── label_encode.pkl
-│
-└── README.md
+node_modules/
+venv/
+.env
+__pycache__/
 ```
 
-## Notes
+Pastikan `.gitignore` berisi:
 
-- Backend harus berjalan di `localhost:5000`.
-- Frontend harus berjalan di `localhost:5173`.
-- AI TensorFlow service harus berjalan di `localhost:8000`.
-- Endpoint selain login/register membutuhkan JWT token.
-- Token dikirim melalui header:
-
-```txt
-Authorization: Bearer <token>
+```gitignore
+node_modules/
+**/node_modules/
+.env
+**/.env
+dist/
+build/
+venv/
+**/venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+.DS_Store
 ```
-
-- File `.env` tidak disarankan untuk di-push ke GitHub.
-
-## License
-
-This project is created for educational and capstone project purposes.

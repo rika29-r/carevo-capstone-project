@@ -4372,3 +4372,158 @@ input[type="checkbox"] {
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* =========================================================
+   CAREVO FINAL FORM CSS LOCK
+   Tujuan: panah select tidak hilang, icon kalender kecil rapi,
+   light/dark tidak saling timpa, dan mobile tetap responsif.
+   ========================================================= */
+.carevo-form select,
+.carevo-form .field-group select,
+.carevo-form .form-card select,
+.carevo-form .experience-card select,
+.carevo-form .education-card select,
+.carevo-form .skill-card select,
+.carevo-form .certification-card select,
+.carevo-form .language-card select,
+.carevo-form .project-card select,
+.carevo-form .profile-card-custom select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  width: 100% !important;
+  min-height: 54px !important;
+  height: 54px !important;
+  line-height: 1.2 !important;
+  padding: 0 56px 0 18px !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--input-border) !important;
+  background-color: var(--input) !important;
+  color: var(--text) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  background-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9L12 15L18 9' stroke='%2394A3B8' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 18px center !important;
+  background-size: 18px 18px !important;
+  box-shadow: none;
+}
+
+.carevo-form.light select,
+.carevo-form.light .field-group select,
+.carevo-form.light .form-card select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+.carevo-form.dark select,
+.carevo-form.dark .field-group select,
+.carevo-form.dark .form-card select {
+  background-color: #07111f !important;
+  color: #ffffff !important;
+  border-color: #263a5c !important;
+}
+
+.carevo-form select option {
+  color: #0f172a !important;
+  background: #ffffff !important;
+}
+
+.carevo-form.dark select option {
+  color: #ffffff !important;
+  background: #0b1220 !important;
+}
+
+.carevo-form input[type="date"],
+.carevo-form .field-group input[type="date"],
+.carevo-form .form-card input[type="date"] {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  width: 100% !important;
+  min-height: 54px !important;
+  height: 54px !important;
+  padding: 0 54px 0 18px !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--input-border) !important;
+  background-color: var(--input) !important;
+  color: var(--text) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  background-repeat: no-repeat !important;
+  background-position: right 18px center !important;
+  background-size: 18px 18px !important;
+}
+
+.carevo-form.dark input[type="date"] {
+  color-scheme: dark;
+  background-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='3.5' y='5.5' width='17' height='15' rx='2.5' stroke='%2394A3B8' stroke-width='2'/%3E%3Cpath d='M8 3.5V7.5M16 3.5V7.5M4 10H20' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+}
+
+.carevo-form.light input[type="date"] {
+  color-scheme: light;
+  background-image: url("data:image/svg+xml,%3Csvg width='18' height='18' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='3.5' y='5.5' width='17' height='15' rx='2.5' stroke='%23475569' stroke-width='2'/%3E%3Cpath d='M8 3.5V7.5M16 3.5V7.5M4 10H20' stroke='%23475569' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+}
+
+.carevo-form input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0 !important;
+  cursor: pointer !important;
+  width: 44px !important;
+  height: 44px !important;
+  margin-right: -38px !important;
+  padding: 0 !important;
+}
+
+.searchable-select-box,
+.searchable-select-box input {
+  min-height: 54px !important;
+  height: 54px !important;
+}
+
+.searchable-select-toggle {
+  min-width: 48px !important;
+  width: 48px !important;
+  height: 54px !important;
+  color: var(--muted) !important;
+  opacity: 1 !important;
+}
+
+.searchable-select-toggle svg {
+  width: 19px !important;
+  height: 19px !important;
+  display: block !important;
+}
+
+.radio-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.radio-option {
+  min-width: 0 !important;
+  word-break: normal !important;
+}
+
+.radio-option span,
+.radio-option strong,
+.radio-option label {
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+}
+
+@media (max-width: 640px) {
+  .radio-grid,
+  .usage-tabs,
+  .skill-option-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .carevo-form select,
+  .carevo-form input[type="date"] {
+    min-height: 50px !important;
+    height: 50px !important;
+    font-size: 14px !important;
+  }
+}

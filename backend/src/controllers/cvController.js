@@ -10,7 +10,6 @@ const {
   BorderStyle,
 } = require('docx');
 const { success } = require('../utils/response');
-const { getCareerRecommendation } = require('../services/careerRecommendationGateway');
 const { getCvDataByUserId, buildChecklist, buildPreviewData, normalizeSections } = require('../services/cvService');
 
 const safe = (value, fallback = '') => String(value ?? fallback).trim();
@@ -107,9 +106,9 @@ const generatePdf = async (req, res) => {
     const imageBuffer = getProfileImageBuffer(profile, fullName);
     doc.fontSize(24).font('Helvetica-Bold').fillColor('#000000').text(fullName, 42, 58, { width: 330 });
     doc.fontSize(11).font('Helvetica').text(safe(profile.professionalTitle || profile.careerInterest, 'Career Profile'), { width: 330 });
-    doc.text(safe(profile.phone, '+62 812 0000 0000'));
-    doc.text(safe(req.user.email || profile.email, 'email@example.com'));
-    doc.text(safe(profile.location, 'Indonesia'));
+    if (hasText(profile.phone)) doc.text(safe(profile.phone));
+    if (hasText(req.user.email || profile.email)) doc.text(safe(req.user.email || profile.email));
+    if (hasText(profile.location)) doc.text(safe(profile.location));
 
     try {
       doc.image(imageBuffer, 455, 58, { width: 95, height: 95, fit: [95, 95] });
@@ -187,13 +186,7 @@ const generatePdf = async (req, res) => {
     cvData.languages.forEach((item) => doc.text(`• ${safe(item.language, 'Language')} — ${safe(item.proficiency, 'Proficiency')}${item.usageFrequency ? ` • ${item.usageFrequency}` : ''}${item.yearStarted ? ` • Since ${item.yearStarted}` : ''}`));
   }
 
-  const ai = await getCareerRecommendation(cvData);
-  if (ai?.recommendedCategory) {
-    drawSectionTitle(doc, 'AI Career Recommendation');
-    doc.font('Helvetica-Bold').fontSize(11).text(`${ai.recommendedCategory} • ${ai.matchScore}% Match`);
-    doc.font('Helvetica').fontSize(10).text(ai.reason || '', { lineGap: 2 });
-    if (ai.topPathMatches?.length) doc.text(`Top Paths: ${ai.topPathMatches.map((p) => `${p.name} (${p.score}%)`).join(', ')}`);
-  }
+
 
   doc.end();
 };
@@ -230,9 +223,9 @@ const generateDocx = async (req, res) => {
     }));
     children.push(line(fullName, { heading: HeadingLevel.TITLE, bold: false, size: 40, after: 80 }));
     children.push(line(safe(profile.professionalTitle || profile.careerInterest, 'Career Profile'), { size: 22, after: 80 }));
-    children.push(line(safe(profile.phone, '+62 812 0000 0000'), { size: 20, after: 40 }));
-    children.push(line(safe(req.user.email || profile.email, 'email@example.com'), { size: 20, after: 40 }));
-    children.push(line(safe(profile.location, 'Indonesia'), { size: 20, after: 220, border: true }));
+    if (hasText(profile.phone)) children.push(line(safe(profile.phone), { size: 20, after: 40 }));
+    if (hasText(req.user.email || profile.email)) children.push(line(safe(req.user.email || profile.email), { size: 20, after: 40 }));
+    if (hasText(profile.location)) children.push(line(safe(profile.location), { size: 20, after: 220, border: true }));
 
     if (profile.shortBio) {
       children.push(sectionTitle('Tentang Saya'));
@@ -291,16 +284,6 @@ const generateDocx = async (req, res) => {
     cvData.languages.forEach((x) => children.push(line(`• ${safe(x.language, 'Language')} — ${safe(x.proficiency, 'Proficiency')}${x.usageFrequency ? ` • ${x.usageFrequency}` : ''}${x.yearStarted ? ` • Since ${x.yearStarted}` : ''}`, { size: 20, after: 50 })));
   }
 
-
-  const ai = await getCareerRecommendation(cvData);
-  if (ai?.recommendedCategory) {
-    children.push(sectionTitle('AI Career Recommendation'));
-    children.push(line(`${ai.recommendedCategory} • ${ai.matchScore}% Match`, { bold: true, size: 22, after: 60 }));
-    children.push(line(ai.reason || '', { size: 20, after: 60 }));
-    if (ai.topPathMatches?.length) {
-      children.push(line(`Top Paths: ${ai.topPathMatches.map((p) => `${p.name} (${p.score}%)`).join(', ')}`, { size: 20, after: 120 }));
-    }
-  }
 
   const doc = new Document({
     sections: [{
