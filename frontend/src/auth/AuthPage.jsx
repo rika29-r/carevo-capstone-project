@@ -192,7 +192,7 @@ export default function AuthPage({ mode = 'login', setMode, onBack, onAuthSucces
             <p className="auth-switch">{isRegister ? 'Already have an account?' : "Don't have an account?"} <button type="button" onClick={switchMode}>{isRegister ? 'Log In' : 'Register'}</button></p>
           </form>
         </div>
-        <footer className="auth-footer"><p>© 2024 CAREVO Digital Curator. All rights reserved.</p><div><span>SECURE AUTHENTICATION</span><span>ENCRYPTED ACCESS</span></div></footer>
+        <footer className="auth-footer"><p>© 2026 CAREVO Digital Curator. All rights reserved.</p><div><span>SECURE AUTHENTICATION</span><span>ENCRYPTED ACCESS</span></div></footer>
       </section>
     </main>
   );
