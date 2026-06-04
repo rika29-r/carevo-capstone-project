@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 
 function Icon({ name }) {
   if (name === "save") {
@@ -80,67 +80,7 @@ function Icon({ name }) {
     );
   }
 
-  if (name === "chevron") {
-    return (
-      <svg viewBox="0 0 24 24">
-        <path d="m6 9 6 6 6-6" />
-      </svg>
-    );
-  }
-
   return null;
-}
-
-function useClickOutside(ref, callback) {
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!ref.current?.contains(event.target)) callback?.();
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [ref, callback]);
-}
-
-function CleanSelect({ label, value, options, onChange, placeholder = "Select..." }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-  useClickOutside(ref, () => setOpen(false));
-
-  const normalizedOptions = options.map((option) =>
-    typeof option === "string" ? { value: option, label: option } : option
-  );
-  const selected = normalizedOptions.find((option) => option.value === value);
-
-  return (
-    <div className="dash-field clean-select-field" ref={ref}>
-      {label && <label>{label}</label>}
-      <button
-        type="button"
-        className={`clean-select-trigger ${open ? "open" : ""}`}
-        onClick={() => setOpen((prev) => !prev)}
-      >
-        <span>{selected?.label || placeholder}</span>
-        <em><Icon name="chevron" /></em>
-      </button>
-      {open && (
-        <div className="clean-select-menu">
-          {normalizedOptions.map((option) => (
-            <button
-              type="button"
-              key={option.value}
-              className={option.value === value ? "active" : ""}
-              onClick={() => {
-                onChange(option.value);
-                setOpen(false);
-              }}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
 }
 
 function Notice({ notice, onClose }) {
@@ -179,24 +119,6 @@ const emptyExperience = {
   skillInput: "",
 };
 
-const cleanExperience = (item = {}) => ({
-  ...emptyExperience,
-  ...(item || {}),
-  jobTitle: item?.jobTitle || '',
-  companyName: item?.companyName || '',
-  employmentType: item?.employmentType || 'Full-time',
-  location: item?.location || '',
-  startDate: item?.startDate || '',
-  endDate: item?.endDate || '',
-  currentlyWork: Boolean(item?.currentlyWork),
-  description: item?.description || '',
-  skillsUsed: Array.isArray(item?.skillsUsed)
-    ? item.skillsUsed.map((skill) => typeof skill === 'string' ? skill : skill?.name).filter(Boolean)
-    : [],
-  skillInput: item?.skillInput || '',
-});
-
-
 function formatDate(date) {
   if (!date) return "-";
 
@@ -209,11 +131,11 @@ function formatDate(date) {
 
 function createExperienceList(formData) {
   if (Array.isArray(formData?.experiences) && formData.experiences.length > 0) {
-    return formData.experiences.map(cleanExperience);
+    return formData.experiences;
   }
 
   if (formData?.experience?.jobTitle || formData?.experience?.companyName) {
-    return [cleanExperience(formData.experience)];
+    return [formData.experience];
   }
 
   return [];
@@ -227,7 +149,7 @@ function Experience({ formData, setFormData }) {
 
   const [currentExperience, setCurrentExperience] = useState(() => {
     const list = createExperienceList(formData);
-    return cleanExperience(list[0] || emptyExperience);
+    return list[0] || emptyExperience;
   });
 
   const [editingIndex, setEditingIndex] = useState(() => {
@@ -331,26 +253,24 @@ function Experience({ formData, setFormData }) {
   const handleSave = () => {
     if (!validateExperience()) return;
 
-    const savedExperience = cleanExperience(currentExperience);
     let updatedExperiences = [];
 
     if (editingIndex === null) {
-      updatedExperiences = [savedExperience, ...experiences.map(cleanExperience)];
+      updatedExperiences = [currentExperience, ...experiences];
       setEditingIndex(0);
     } else {
       updatedExperiences = experiences.length
         ? experiences.map((item, index) =>
-          index === editingIndex ? savedExperience : cleanExperience(item)
+          index === editingIndex ? currentExperience : item
         )
-        : [savedExperience];
+        : [currentExperience];
     }
 
-    setCurrentExperience(savedExperience);
     setExperiences(updatedExperiences);
 
     setFormData?.((prev) => ({
       ...prev,
-      experience: savedExperience,
+      experience: currentExperience,
       experiences: updatedExperiences,
     }));
 
@@ -362,13 +282,13 @@ function Experience({ formData, setFormData }) {
   };
 
   const handleAddNew = () => {
-    setCurrentExperience(cleanExperience(emptyExperience));
+    setCurrentExperience(emptyExperience);
     setEditingIndex(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleEdit = (index) => {
-    setCurrentExperience(cleanExperience(experiences[index]));
+    setCurrentExperience(experiences[index]);
     setEditingIndex(index);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -378,7 +298,7 @@ function Experience({ formData, setFormData }) {
 
     setExperiences(updatedExperiences);
 
-    const nextCurrent = cleanExperience(updatedExperiences[0] || emptyExperience);
+    const nextCurrent = updatedExperiences[0] || emptyExperience;
     setCurrentExperience(nextCurrent);
     setEditingIndex(updatedExperiences.length > 0 ? 0 : null);
 
@@ -457,7 +377,7 @@ function Experience({ formData, setFormData }) {
                 <label>Job Title</label>
                 <input
                   type="text"
-                  value={currentExperience.jobTitle || ""}
+                  value={currentExperience.jobTitle}
                   placeholder="e.g. Senior Product Designer"
                   onChange={(event) =>
                     updateCurrentExperience("jobTitle", event.target.value)
@@ -469,7 +389,7 @@ function Experience({ formData, setFormData }) {
                 <label>Company Name</label>
                 <input
                   type="text"
-                  value={currentExperience.companyName || ""}
+                  value={currentExperience.companyName}
                   placeholder="e.g. InnovateTech Solutions"
                   onChange={(event) =>
                     updateCurrentExperience("companyName", event.target.value)
@@ -477,18 +397,27 @@ function Experience({ formData, setFormData }) {
                 />
               </div>
 
-              <CleanSelect
-                label="Employment Type"
-                value={currentExperience.employmentType || "Full-time"}
-                options={["Full-time", "Part-time", "Internship", "Freelance", "Contract", "Volunteer", "Organization"]}
-                onChange={(value) => updateCurrentExperience("employmentType", value)}
-              />
+              <div className="dash-field">
+                <label>Employment Type</label>
+                <select
+                  value={currentExperience.employmentType}
+                  onChange={(event) =>
+                    updateCurrentExperience("employmentType", event.target.value)
+                  }
+                >
+                  <option>Full-time</option>
+                  <option>Part-time</option>
+                  <option>Internship</option>
+                  <option>Freelance</option>
+                  <option>Contract</option>
+                </select>
+              </div>
 
               <div className="dash-field">
                 <label>Location</label>
                 <input
                   type="text"
-                  value={currentExperience.location || ""}
+                  value={currentExperience.location}
                   placeholder="e.g. Jakarta, Indonesia"
                   onChange={(event) =>
                     updateCurrentExperience("location", event.target.value)
@@ -500,7 +429,7 @@ function Experience({ formData, setFormData }) {
                 <label>Start Date</label>
                 <input
                   type="date"
-                  value={currentExperience.startDate || ""}
+                  value={currentExperience.startDate}
                   onKeyDown={(event) => event.preventDefault()}
                   onClick={(event) => event.currentTarget.showPicker?.()}
                   onChange={(event) =>
@@ -515,7 +444,7 @@ function Experience({ formData, setFormData }) {
                 <div className="end-date-row">
                   <input
                     type="date"
-                    value={currentExperience.endDate || ""}
+                    value={currentExperience.endDate}
                     disabled={currentExperience.currentlyWork}
                     onKeyDown={(event) => event.preventDefault()}
                     onClick={(event) => event.currentTarget.showPicker?.()}
@@ -527,7 +456,7 @@ function Experience({ formData, setFormData }) {
                   <label className="current-check">
                     <input
                       type="checkbox"
-                      checked={Boolean(currentExperience.currentlyWork)}
+                      checked={currentExperience.currentlyWork}
                       onChange={(event) => {
                         updateCurrentExperience("currentlyWork", event.target.checked);
 
@@ -546,7 +475,7 @@ function Experience({ formData, setFormData }) {
             <div className="dash-field">
               <label>Description</label>
               <textarea
-                value={currentExperience.description || ""}
+                value={currentExperience.description}
                 placeholder="Describe your responsibilities, achievements, and impact..."
                 onChange={(event) =>
                   updateCurrentExperience("description", event.target.value)

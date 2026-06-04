@@ -7,8 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1Y_WWDqWkX16ny9adzpPmFJyv3-6l_U4P
 """
 
-!pip install -q python-docx
-
 from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH

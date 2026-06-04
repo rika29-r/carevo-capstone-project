@@ -12,13 +12,6 @@ const emptyEducation = {
   description: '',
 };
 
-const toDateInputValue = (value) => {
-  if (!value) return '';
-  const text = String(value);
-  if (text.includes('T')) return text.split('T')[0];
-  return text.slice(0, 10);
-};
-
 function Icon({ name }) {
   if (name === 'education') return <svg viewBox="0 0 24 24"><path d="M3 8.5 12 4l9 4.5-9 4.5-9-4.5Z"/><path d="M7 11v5c1.3 1.4 3 2 5 2s3.7-.6 5-2v-5"/></svg>;
   if (name === 'calendar') return <svg viewBox="0 0 24 24"><path d="M7 3v4"/><path d="M17 3v4"/><path d="M4 8h16"/><path d="M5 5h14v16H5V5Z"/></svg>;
@@ -46,10 +39,9 @@ function Education({ formData = {}, setFormData, notify }) {
   };
 
   const openEdit = (item, index) => {
-    setDraft({ ...emptyEducation, ...item, startDate: toDateInputValue(item.startDate), endDate: toDateInputValue(item.endDate) });
+    setDraft({ ...emptyEducation, ...item });
     setEditingIndex(index);
     setShowForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const closeForm = () => {
@@ -64,11 +56,17 @@ function Education({ formData = {}, setFormData, notify }) {
       return;
     }
 
-    const saved = { ...draft, endDate: draft.currentlyStudy ? '' : draft.endDate };
-    const nextItems = editingIndex === null ? [saved, ...items] : items.map((item, index) => (index === editingIndex ? saved : item));
+    const saved = { ...draft };
+    const nextItems = editingIndex === null
+      ? [saved, ...items]
+      : items.map((item, index) => (index === editingIndex ? saved : item));
 
     setItems(nextItems);
-    setFormData?.((prev) => ({ ...prev, education: nextItems[0] || emptyEducation, educations: nextItems }));
+    setFormData?.((prev) => ({
+      ...prev,
+      education: nextItems[0] || emptyEducation,
+      educations: nextItems,
+    }));
     notify?.('success', 'Education Saved', 'Data education berhasil disimpan.');
     closeForm();
   };
@@ -76,7 +74,11 @@ function Education({ formData = {}, setFormData, notify }) {
   const deleteEducation = (index) => {
     const nextItems = items.filter((_, itemIndex) => itemIndex !== index);
     setItems(nextItems);
-    setFormData?.((prev) => ({ ...prev, education: nextItems[0] || emptyEducation, educations: nextItems }));
+    setFormData?.((prev) => ({
+      ...prev,
+      education: nextItems[0] || emptyEducation,
+      educations: nextItems,
+    }));
     notify?.('success', 'Education Deleted', 'Data education berhasil dihapus.');
   };
 
@@ -91,7 +93,7 @@ function Education({ formData = {}, setFormData, notify }) {
       </div>
 
       {showForm && (
-        <div className="dash-edit-card dashboard-form-box simple-add-form education-form-box">
+        <div className="dash-edit-card dashboard-form-box simple-add-form">
           <div className="dashboard-form-head">
             <div>
               <h2>{editingIndex === null ? 'Add Education' : 'Edit Education'}</h2>
@@ -103,11 +105,11 @@ function Education({ formData = {}, setFormData, notify }) {
           <div className="dashboard-two-col-form">
             <label className="dash-field"><span>Institution Name</span><input value={draft.institutionName} onChange={(e) => update('institutionName', e.target.value)} placeholder="University / School name" /></label>
             <label className="dash-field"><span>Degree / Major</span><input value={draft.degreeMajor} onChange={(e) => update('degreeMajor', e.target.value)} placeholder="S1 Agribusiness" /></label>
-            <label className="dash-field"><span>Start Date</span><input type="date" value={toDateInputValue(draft.startDate)} onChange={(e) => update('startDate', e.target.value)} /></label>
-            <label className="dash-field"><span>End Date</span><input type="date" disabled={draft.currentlyStudy} value={toDateInputValue(draft.endDate)} onChange={(e) => update('endDate', e.target.value)} /></label>
+            <label className="dash-field"><span>Start Date</span><input type="date" value={draft.startDate} onChange={(e) => update('startDate', e.target.value)} /></label>
+            <label className="dash-field"><span>End Date</span><input type="date" disabled={draft.currentlyStudy} value={draft.endDate} onChange={(e) => update('endDate', e.target.value)} /></label>
             <label className="dash-field"><span>Location</span><input value={draft.location} onChange={(e) => update('location', e.target.value)} placeholder="City, Country" /></label>
             <label className="dash-field"><span>GPA</span><input value={draft.gpa} onChange={(e) => update('gpa', e.target.value)} placeholder="3.80" /></label>
-            <label className="dashboard-check-row form-full"><input type="checkbox" checked={draft.currentlyStudy} onChange={(e) => update('currentlyStudy', e.target.checked)} /> <span>Currently studying here</span></label>
+            <label className="dashboard-check-row"><input type="checkbox" checked={draft.currentlyStudy} onChange={(e) => update('currentlyStudy', e.target.checked)} /> Currently studying here</label>
             <label className="dash-field form-full"><span>Description</span><textarea value={draft.description} onChange={(e) => update('description', e.target.value)} placeholder="Activities, achievements, relevant coursework..." /></label>
           </div>
 
@@ -128,16 +130,16 @@ function Education({ formData = {}, setFormData, notify }) {
       <div className="education-list-display">
         {items.length ? items.map((item, index) => (
           <div className="education-display-card" key={`${item.institutionName}-${index}`}>
-            <div className="education-icon"><Icon name="education" /></div>
-            <div className="education-card-body">
+            <Icon name="education" />
+            <div>
               <h2>{item.degreeMajor}</h2>
               <h3>{item.institutionName}</h3>
               <p>{item.location || 'Location belum diisi'} • {formatYear(item.startDate)} — {item.currentlyStudy ? 'Present' : formatYear(item.endDate)}</p>
               <span>{item.description || 'Description belum diisi.'}</span>
             </div>
-            <div className="dashboard-row-actions education-card-actions">
-              <button type="button" onClick={() => openEdit(item, index)} aria-label="Edit education"><Icon name="edit" /></button>
-              <button type="button" onClick={() => deleteEducation(index)} aria-label="Delete education"><Icon name="trash" /></button>
+            <div className="dashboard-row-actions">
+              <button type="button" onClick={() => openEdit(item, index)}><Icon name="edit" /></button>
+              <button type="button" onClick={() => deleteEducation(index)}><Icon name="trash" /></button>
             </div>
           </div>
         )) : <div className="empty-dashboard-card"><h3>Education belum diisi</h3><p>Data akan muncul setelah form Education selesai diisi.</p></div>}

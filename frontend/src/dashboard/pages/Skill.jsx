@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getSkillList, getSkillPercent } from './helpers';
 
-const emptySkill = { name: '', category: 'General', level: 'Basic' };
+const emptySkill = {
+  name: '',
+  category: 'General',
+  level: 'Basic',
+};
+
 const categoryOptions = ['General', 'Technical', 'Soft Skill', 'Design', 'Business', 'Data', 'Language'];
 const levelOptions = ['Basic', 'Intermediate', 'Advanced', 'Expert'];
 
@@ -55,42 +60,75 @@ function SkillIcon({ type }) {
   if (type === 'save') return <svg viewBox="0 0 24 24"><path d="M5 4h12l2 2v14H5V4Z" /><path d="M8 4v6h8V4" /><path d="M8 20v-6h8v6" /></svg>;
   if (type === 'x') return <svg viewBox="0 0 24 24"><path d="M6 6l12 12" /><path d="M18 6 6 18" /></svg>;
   if (type === 'trash') return <svg viewBox="0 0 24 24"><path d="M4 7h16" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M6 7l1 14h10l1-14" /><path d="M9 7V4h6v3" /></svg>;
-  if (type === 'chevron') return <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg>;
   return <svg viewBox="0 0 24 24"><path d="m8 9-4 3 4 3" /><path d="m16 9 4 3-4 3" /><path d="m14 4-4 16" /></svg>;
 }
 
-function useClickOutside(ref, callback) {
+
+function SearchableSelect({ label, value, options, placeholder, onChange, className = '' }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState(value || '');
+  const wrapRef = useRef(null);
+
+  useEffect(() => {
+    setQuery(value || '');
+  }, [value]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (!ref.current?.contains(event.target)) callback?.();
+      if (!wrapRef.current?.contains(event.target)) setOpen(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [ref, callback]);
-}
+  }, []);
 
-function CleanSelect({ label, value, options, onChange, placeholder = 'Select...' }) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
-  useClickOutside(ref, () => setOpen(false));
+  const filtered = options.filter((item) =>
+    item.toLowerCase().includes(String(query || '').toLowerCase())
+  );
+
+  const choose = (item) => {
+    onChange(item);
+    setQuery(item);
+    setOpen(false);
+  };
+
+  const handleTyping = (event) => {
+    const next = event.target.value;
+    setQuery(next);
+    onChange(next);
+    setOpen(true);
+  };
 
   return (
-    <div className="dash-field clean-select-field" ref={ref}>
-      <label>{label}</label>
-      <button type="button" className={`clean-select-trigger ${open ? 'open' : ''}`} onClick={() => setOpen((prev) => !prev)}>
-        <span>{value || placeholder}</span>
-        <em><SkillIcon type="chevron" /></em>
-      </button>
+    <label className={`dash-field skill-combo-field ${className}`} ref={wrapRef}>
+      <span>{label}</span>
+      <div className={`skill-combo ${open ? 'open' : ''}`}>
+        <input
+          type="text"
+          value={query}
+          placeholder={placeholder}
+          onFocus={() => setOpen(true)}
+          onChange={handleTyping}
+        />
+        <button type="button" className="skill-combo-arrow" onClick={() => setOpen((prev) => !prev)} aria-label={`Open ${label}`}>
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+        </button>
+      </div>
       {open && (
-        <div className="clean-select-menu">
-          {options.map((option) => (
-            <button type="button" key={option} className={option === value ? 'active' : ''} onClick={() => { onChange(option); setOpen(false); }}>
-              {option}
+        <div className="skill-combo-menu">
+          {(filtered.length ? filtered : options).map((item) => (
+            <button
+              type="button"
+              key={item}
+              className={item.toLowerCase() === String(value || '').toLowerCase() ? 'active' : ''}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={() => choose(item)}
+            >
+              {item}
             </button>
           ))}
         </div>
       )}
-    </div>
+    </label>
   );
 }
 
@@ -98,8 +136,8 @@ function SkillGroup({ title, skills, onDelete }) {
   return (
     <div className={`skill-display-card category-${title.toLowerCase().replace(/\s+/g, '-')}`}>
       <div className="skill-display-head">
-        <h2><SkillIcon type={title} /> <span>{title} ({skills.length})</span></h2>
-        <span className="skill-more">•••</span>
+        <h2><SkillIcon type={title} /> {title} ({skills.length})</h2>
+        <span>•••</span>
       </div>
 
       <div className="skill-display-list">
@@ -126,10 +164,12 @@ function Skill({ formData = {}, setFormData, notify }) {
     setSkills(normalizeSkillList(formData));
   }, [formData]);
 
-  const groupedSkills = useMemo(() => categoryOptions.reduce((acc, category) => {
-    acc[category] = skills.filter((skill) => normalizeCategory(skill.category) === category);
-    return acc;
-  }, {}), [skills]);
+  const groupedSkills = useMemo(() => {
+    return categoryOptions.reduce((acc, category) => {
+      acc[category] = skills.filter((skill) => normalizeCategory(skill.category) === category);
+      return acc;
+    }, {});
+  }, [skills]);
 
   const avg = skills.length ? Math.round(skills.reduce((sum, s) => sum + getSkillPercent(s.level), 0) / skills.length) : 0;
   const topCategory = categoryOptions.reduce((best, category) => groupedSkills[category].length > groupedSkills[best].length ? category : best, 'General');
@@ -162,6 +202,7 @@ function Skill({ formData = {}, setFormData, notify }) {
       notify?.('error', 'Data Belum Lengkap', 'Skill name wajib diisi.');
       return;
     }
+
     const nextSkills = [saved, ...skills.filter((item) => item.name.toLowerCase() !== saved.name.toLowerCase())];
     commitSkills(nextSkills, 'Skill berhasil ditambahkan.');
     resetForm();
@@ -186,14 +227,43 @@ function Skill({ formData = {}, setFormData, notify }) {
             <button type="button" className="form-close-btn" onClick={resetForm}><SkillIcon type="x" /></button>
           </div>
 
-          <div className="dashboard-two-col-form skill-add-grid-fixed">
-            <label className="dash-field">
+          <div className="dashboard-two-col-form skill-add-grid-fixed clean-skill-form">
+            <label className="dash-field form-full">
               <span>Skill Name</span>
-              <input value={draft.name} placeholder="e.g. Microsoft Excel" onChange={(e) => setDraft((prev) => ({ ...prev, name: e.target.value }))} />
+              <input
+                value={draft.name}
+                placeholder="e.g. Microsoft Excel"
+                onChange={(e) => setDraft((prev) => ({ ...prev, name: e.target.value }))}
+              />
             </label>
 
-            <CleanSelect label="Category" value={draft.category} options={categoryOptions} onChange={(value) => setDraft((prev) => ({ ...prev, category: value }))} />
-            <CleanSelect label="Level" value={draft.level} options={levelOptions} onChange={(value) => setDraft((prev) => ({ ...prev, level: value }))} />
+            <label className="dash-field">
+              <span>Category</span>
+              <div className="carevo-select">
+                <select
+                  value={draft.category}
+                  onChange={(e) => setDraft((prev) => ({ ...prev, category: e.target.value }))}
+                >
+                  {categoryOptions.map((option) => (
+                    <option value={option} key={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+            </label>
+
+            <label className="dash-field">
+              <span>Level</span>
+              <div className="carevo-select">
+                <select
+                  value={draft.level}
+                  onChange={(e) => setDraft((prev) => ({ ...prev, level: e.target.value }))}
+                >
+                  {levelOptions.map((option) => (
+                    <option value={option} key={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+            </label>
           </div>
 
           <div className="dashboard-form-actions">
@@ -204,13 +274,13 @@ function Skill({ formData = {}, setFormData, notify }) {
       )}
 
       <div className="skill-stat-grid">
-        <div><span>Total Skills</span><strong>{skills.length}</strong><p>Skills Added</p></div>
-        <div><span>Top Category</span><strong>{topCategory}</strong><p>{groupedSkills[topCategory]?.length || 0} skills</p></div>
-        <div><span>Strongest Skill</span><strong>{strongest?.name || '-'}</strong><p>{strongest?.level || 'No skill yet'}</p></div>
-        <div><span>Average Level</span><strong>{avg}%</strong><p>Across all skills</p></div>
+        <div><span>TOTAL SKILLS</span><strong>{skills.length}</strong></div>
+        <div><span>TOP CATEGORY</span><strong>{topCategory}</strong><p>{groupedSkills[topCategory]?.length || 0} skills</p></div>
+        <div><span>AVERAGE PROFICIENCY</span><strong>{avg}%</strong></div>
+        <div><span>STRONGEST SKILL</span><strong>{strongest?.name || '-'}</strong><p>{strongest?.level || 'Basic'}</p></div>
       </div>
 
-      <div className="skill-display-grid">
+      <div className="skill-display-grid skill-category-grid">
         {categoryOptions.map((category) => <SkillGroup key={category} title={category} skills={groupedSkills[category] || []} onDelete={deleteSkill} />)}
       </div>
     </div>
