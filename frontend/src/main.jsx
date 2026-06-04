@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.css';
+import './dashboard/dashboard.css';
 import AuthPage from './auth/AuthPage';
 import FormPage from './form/FormPage';
 import DashboardPage from './dashboard/DashboardPage';

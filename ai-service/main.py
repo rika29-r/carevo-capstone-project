@@ -41,7 +41,7 @@ load_error = ""
 
 PROFILE_TITLES = {
     "Administrasi": "Administrative Specialist",
-    "Bisnis": "Business Analyst",
+    "Bisnis": "Business & HR Specialist",
     "Data & AI": "Data Science",
     "Keamanan Siber": "Cyber Security Analyst",
     "Kreatif & Desain": "UI/UX Designer",
@@ -52,7 +52,7 @@ PROFILE_TITLES = {
 
 TOP_PATHS = {
     "Administrasi": ["Administrative Officer", "Office Coordinator", "Data Entry Specialist"],
-    "Bisnis": ["Business Analyst", "Project Manager", "Operations Analyst"],
+    "Bisnis": ["Human Resource Staff", "Business Analyst", "Project Coordinator"],
     "Data & AI": ["Data Scientist", "Data Analyst", "Machine Learning Engineer"],
     "Keamanan Siber": ["Cyber Security Analyst", "SOC Analyst", "Security Engineer"],
     "Kreatif & Desain": ["UI/UX Designer", "Product Designer", "Visual Designer"],
@@ -63,7 +63,7 @@ TOP_PATHS = {
 
 KEYWORDS = {
     "Administrasi": ["administrasi", "admin", "data entry", "scheduling", "microsoft excel", "microsoft word", "laporan", "office", "dokumen"],
-    "Bisnis": ["business", "bisnis", "management", "project management", "agile", "scrum", "strategy", "leadership", "negosiasi", "sales"],
+    "Bisnis": ["human resource", "hr", "sumber daya manusia", "recruitment", "rekrutmen", "employee", "karyawan", "people management", "candidate screening", "interview", "hr administration", "administrasi karyawan", "business", "bisnis", "management", "project management", "strategy", "leadership", "communication", "sales"],
     "Data & AI": ["python", "sql", "data", "data analysis", "machine learning", "tensorflow", "statistik", "statistics", "analytics", "dashboard", "pandas"],
     "Keamanan Siber": ["cyber", "security", "network security", "penetration testing", "ethical hacking", "firewall", "malware", "linux"],
     "Kreatif & Desain": ["design", "desain", "ui", "ux", "figma", "wireframe", "wireframing", "prototype", "photoshop", "illustrator"],
@@ -71,6 +71,62 @@ KEYWORDS = {
     "Pendidikan": ["teaching", "mentoring", "pendidikan", "kurikulum", "public speaking", "kelas", "teacher", "training"],
     "Rekayasa Perangkat Lunak": ["software", "backend", "frontend", "java", "spring boot", "microservices", "docker", "react", "node", "api", "programming"],
 }
+
+
+# Rule prioritas untuk demo/production ringan.
+# Ini menjaga agar input Human Resource tidak salah masuk Software hanya karena jurusan Teknik Informatika.
+HR_KEYWORDS = [
+    "human resource", "hr", "sumber daya manusia", "recruitment", "rekrutmen",
+    "recruiter", "employee", "karyawan", "people management", "candidate screening",
+    "interview", "wawancara", "hr administration", "administrasi karyawan",
+]
+
+STRONG_SOFTWARE_KEYWORDS = [
+    "frontend", "backend", "fullstack", "javascript", "typescript", "react", "node",
+    "express", "rest api", "coding", "programming", "docker", "software engineer",
+    "software engineering",
+]
+
+
+def contains_any(text: str, keywords: List[str]) -> bool:
+    return any(keyword in text for keyword in keywords)
+
+
+def rule_based_override(text: str) -> Optional[Dict[str, Any]]:
+    cleaned = clean_text(text)
+    has_hr = contains_any(cleaned, HR_KEYWORDS)
+    has_software = contains_any(cleaned, STRONG_SOFTWARE_KEYWORDS)
+
+    if has_hr and not has_software:
+        category = "Bisnis"
+        paths = TOP_PATHS.get(category, [category])
+        top_paths = [{"name": path, "score": max(55, 95 - index * 4)} for index, path in enumerate(paths[:3])]
+        return {
+            "success": True,
+            "prediction": category,
+            "recommendedCategory": category,
+            "profileTitle": "Business & HR Specialist",
+            "confidence": 0.95,
+            "matchScore": 95,
+            "level": "ELITE PROFILE",
+            "topPathMatches": top_paths,
+            "recommendedCareers": [item["name"] for item in top_paths],
+            "matchedKeywords": [keyword for keyword in HR_KEYWORDS if keyword in cleaned],
+            "reason": "Input lebih dominan Human Resource/HR, sehingga sistem memprioritaskan kategori Bisnis.",
+            "suggestions": [
+                "Perkuat pengalaman recruitment, employee administration, interview, dan people management.",
+                "Tambahkan project atau kegiatan organisasi yang berkaitan dengan HR.",
+                "Rapikan deskripsi profile dan experience agar CV lebih kuat untuk posisi HR.",
+            ],
+            "rankedCategories": [
+                {"category": "Bisnis", "rawScore": 0.95, "match": 95, "matchedKeywords": [keyword for keyword in HR_KEYWORDS if keyword in cleaned]},
+                {"category": "Rekayasa Perangkat Lunak", "rawScore": 0.12, "match": 35, "matchedKeywords": []},
+            ],
+            "engine": "rule-based-hr-override",
+            "modelLoaded": model is not None,
+        }
+
+    return None
 
 
 def clean_text(text: Any) -> str:
@@ -227,6 +283,11 @@ def model_predict(text: str) -> Dict[str, Any]:
 def normalize_result(text: str) -> Dict[str, Any]:
     if not clean_text(text):
         text = "general profile"
+
+    override = rule_based_override(text)
+    if override is not None:
+        return override
+
     result = model_predict(text)
     ranked = result.get("ranked", [])
     best = ranked[0] if ranked else {"category": "Bisnis", "rawScore": 0.45, "matchedKeywords": []}
@@ -406,12 +467,7 @@ def generate_ats_cv(payload: GenerateCvRequest):
     add_section_title(doc, "Languages")
     doc.add_paragraph(payload.languages or "")
 
-    add_section_title(doc, "AI Recommended Career Category")
-    doc.add_paragraph(payload.career_group or "")
-
-    add_section_title(doc, "AI Recommended Career Path")
-    for idx, career in enumerate(payload.recommended_careers or [], start=1):
-        add_bullet(doc, f"{idx}. {career}")
+    # AI Match sengaja tidak dimasukkan ke CV agar CV tetap ATS-friendly.
 
     out = tempfile.NamedTemporaryFile(delete=False, suffix=".docx")
     out.close()

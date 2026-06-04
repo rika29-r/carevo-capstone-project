@@ -1,11 +1,11 @@
-const { collectCvText } = require('./careerAiService');
+const { collectCvText, correctCareerPrediction, normalizeCategoryName } = require('./careerAiService');
 
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:8000';
 const AI_SERVICE_TIMEOUT_MS = Number(process.env.AI_SERVICE_TIMEOUT_MS || 10000);
 
 const PROFILE_TITLES = {
   'Administrasi': 'Administrative Specialist',
-  'Bisnis': 'Business Analyst',
+  'Bisnis': 'Business & HR Specialist',
   'Data & AI': 'Data Science',
   'Keamanan Siber': 'Cyber Security Analyst',
   'Kreatif & Desain': 'UI/UX Designer',
@@ -16,7 +16,7 @@ const PROFILE_TITLES = {
 
 const TOP_PATHS = {
   'Administrasi': ['Administrative Officer', 'Office Coordinator', 'Data Entry Specialist'],
-  'Bisnis': ['Business Analyst', 'Project Manager', 'Operations Analyst'],
+  'Bisnis': ['Human Resource Staff', 'Business Analyst', 'Project Coordinator'],
   'Data & AI': ['Data Scientist', 'Data Analyst', 'Machine Learning Engineer'],
   'Keamanan Siber': ['Cyber Security Analyst', 'SOC Analyst', 'Security Engineer'],
   'Kreatif & Desain': ['UI/UX Designer', 'Product Designer', 'Visual Designer'],
@@ -26,26 +26,11 @@ const TOP_PATHS = {
 };
 
 function normalizeAiResponse(json = {}) {
-  const rawResponse = json;
-  const data =
-    typeof rawResponse === 'string'
-      ? { prediction: rawResponse }
-      : Array.isArray(rawResponse)
-        ? { prediction: rawResponse[0] }
-        : rawResponse || {};
-
-  const rawCategory =
-    data.recommendedCategory ||
-    data.prediction ||
-    data.category ||
-    data.label ||
-    data.result ||
-    data.career ||
-    'Rekayasa Perangkat Lunak';
-
-  const category = String(rawCategory || 'Rekayasa Perangkat Lunak').trim();
-  const confidence = Number(data.confidence || data.probability || data.score || data.matchScore || 0.88);
-  const matchScore = Number(json.matchScore || Math.round(Math.min(0.98, Math.max(0.52, confidence)) * 100));
+  const data = typeof json === 'string' ? { prediction: json } : Array.isArray(json) ? { prediction: json[0] } : (json || {});
+  const rawCategory = data.recommendedCategory || data.prediction || data.category || data.label || data.result || data.career || 'Bisnis';
+  const category = normalizeCategoryName(rawCategory) || 'Bisnis';
+  const confidenceRaw = Number(data.confidence || data.probability || data.score || 0.78);
+  const matchScore = Number(data.matchScore || Math.round(Math.min(0.98, Math.max(0.52, confidenceRaw)) * 100));
   const defaultPaths = TOP_PATHS[category] || [category, 'Career Specialist', 'Professional Role'];
 
   const topPathMatches = Array.isArray(data.topPathMatches)
@@ -73,7 +58,7 @@ function normalizeAiResponse(json = {}) {
     suggestions: data.suggestions || [
       `Perkuat project dan skill yang relevan dengan ${category}.`,
       'Lengkapi pengalaman, education, skill, certification, dan project agar hasil AI makin akurat.',
-      'Generate CV akan memakai data terbaru dan rekomendasi AI ini.',
+      'Generate CV memakai data terbaru dari dashboard.',
     ],
     rankedCategories: data.rankedCategories || [],
     engine: data.engine || 'carevo-ai-api-/predict',
@@ -87,12 +72,10 @@ async function predictWithTensorFlow(cvData = {}) {
   const skillsText = collectCvText(cvData);
 
   try {
-    // Sesuai API AI yang diberikan: POST /predict dengan body { skills_text: "..." }
     const response = await fetch(`${AI_SERVICE_URL.replace(/\/$/, '')}/predict`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // Dibutuhkan kalau AI dibuka lewat ngrok free di browser/server tertentu.
         'ngrok-skip-browser-warning': 'true',
       },
       body: JSON.stringify({ skills_text: skillsText || 'general profile' }),
@@ -105,7 +88,7 @@ async function predictWithTensorFlow(cvData = {}) {
     }
 
     const json = await response.json();
-    return normalizeAiResponse(json);
+    return correctCareerPrediction(skillsText, normalizeAiResponse(json));
   } finally {
     clearTimeout(timer);
   }

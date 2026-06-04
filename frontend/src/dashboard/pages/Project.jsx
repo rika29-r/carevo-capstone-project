@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const emptyProject = {
   thumbnail: "",
@@ -113,7 +113,67 @@ function Icon({ name }) {
     );
   }
 
+  if (name === "chevron") {
+    return (
+      <svg viewBox="0 0 24 24">
+        <path d="m6 9 6 6 6-6" />
+      </svg>
+    );
+  }
+
   return null;
+}
+
+function useClickOutside(ref, callback) {
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!ref.current?.contains(event.target)) callback?.();
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [ref, callback]);
+}
+
+function CleanSelect({ label, value, options, onChange, placeholder = "Select..." }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useClickOutside(ref, () => setOpen(false));
+
+  const normalizedOptions = options.map((option) =>
+    typeof option === "string" ? { value: option, label: option } : option
+  );
+  const selected = normalizedOptions.find((option) => option.value === value);
+
+  return (
+    <div className="dash-field clean-select-field" ref={ref}>
+      {label && <label>{label}</label>}
+      <button
+        type="button"
+        className={`clean-select-trigger ${open ? "open" : ""}`}
+        onClick={() => setOpen((prev) => !prev)}
+      >
+        <span>{selected?.label || placeholder}</span>
+        <em><Icon name="chevron" /></em>
+      </button>
+      {open && (
+        <div className="clean-select-menu">
+          {normalizedOptions.map((option) => (
+            <button
+              type="button"
+              key={option.value}
+              className={option.value === value ? "active" : ""}
+              onClick={() => {
+                onChange(option.value);
+                setOpen(false);
+              }}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function Notice({ notice, onClose }) {
@@ -415,18 +475,12 @@ function Project({ formData, setFormData, notify }) {
               </div>
 
               <div className="project-two-col">
-                <div className="dash-field">
-                  <label>Status</label>
-                  <select
-                    value={currentProject.status}
-                    onChange={(event) => updateProject("status", event.target.value)}
-                  >
-                    <option>In Progress</option>
-                    <option>Completed</option>
-                    <option>Archived</option>
-                    <option>Draft</option>
-                  </select>
-                </div>
+                <CleanSelect
+                  label="Status"
+                  value={currentProject.status}
+                  options={["In Progress", "Completed", "Archived", "Draft"]}
+                  onChange={(value) => updateProject("status", value)}
+                />
 
                 <div className="dash-field">
                   <label>Start Date</label>

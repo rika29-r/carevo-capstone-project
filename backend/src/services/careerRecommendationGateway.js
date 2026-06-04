@@ -1,8 +1,9 @@
-const { recommendFromCvData } = require('./careerAiService');
+const { recommendFromCvData, collectCvText, correctCareerPrediction } = require('./careerAiService');
 const { predictWithTensorFlow } = require('./tensorflowAiClient');
 
 async function getCareerRecommendation(cvData = {}) {
   const useTensorFlow = String(process.env.USE_TENSORFLOW_AI || 'true').toLowerCase() !== 'false';
+  const inputText = collectCvText(cvData);
 
   if (!useTensorFlow) {
     return {
@@ -15,8 +16,8 @@ async function getCareerRecommendation(cvData = {}) {
   try {
     const result = await predictWithTensorFlow(cvData);
     return {
-      ...result,
-      engine: result.engine || 'tensorflow-fastapi',
+      ...correctCareerPrediction(inputText, result),
+      engine: result.engine || 'tensorflow-fastapi-with-backend-correction',
       fromTensorFlow: true,
     };
   } catch (err) {

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 function Icon({ name }) {
   if (name === "save") {
@@ -80,7 +80,67 @@ function Icon({ name }) {
     );
   }
 
+  if (name === "chevron") {
+    return (
+      <svg viewBox="0 0 24 24">
+        <path d="m6 9 6 6 6-6" />
+      </svg>
+    );
+  }
+
   return null;
+}
+
+function useClickOutside(ref, callback) {
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!ref.current?.contains(event.target)) callback?.();
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [ref, callback]);
+}
+
+function CleanSelect({ label, value, options, onChange, placeholder = "Select..." }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useClickOutside(ref, () => setOpen(false));
+
+  const normalizedOptions = options.map((option) =>
+    typeof option === "string" ? { value: option, label: option } : option
+  );
+  const selected = normalizedOptions.find((option) => option.value === value);
+
+  return (
+    <div className="dash-field clean-select-field" ref={ref}>
+      {label && <label>{label}</label>}
+      <button
+        type="button"
+        className={`clean-select-trigger ${open ? "open" : ""}`}
+        onClick={() => setOpen((prev) => !prev)}
+      >
+        <span>{selected?.label || placeholder}</span>
+        <em><Icon name="chevron" /></em>
+      </button>
+      {open && (
+        <div className="clean-select-menu">
+          {normalizedOptions.map((option) => (
+            <button
+              type="button"
+              key={option.value}
+              className={option.value === value ? "active" : ""}
+              onClick={() => {
+                onChange(option.value);
+                setOpen(false);
+              }}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function Notice({ notice, onClose }) {
@@ -417,23 +477,12 @@ function Experience({ formData, setFormData }) {
                 />
               </div>
 
-              <div className="dash-field">
-                <label>Employment Type</label>
-                <select
-                  value={currentExperience.employmentType || ""}
-                  onChange={(event) =>
-                    updateCurrentExperience("employmentType", event.target.value)
-                  }
-                >
-                  <option>Full-time</option>
-                  <option>Part-time</option>
-                  <option>Internship</option>
-                  <option>Freelance</option>
-                  <option>Contract</option>
-                  <option>Volunteer</option>
-                  <option>Organization</option>
-                </select>
-              </div>
+              <CleanSelect
+                label="Employment Type"
+                value={currentExperience.employmentType || "Full-time"}
+                options={["Full-time", "Part-time", "Internship", "Freelance", "Contract", "Volunteer", "Organization"]}
+                onChange={(value) => updateCurrentExperience("employmentType", value)}
+              />
 
               <div className="dash-field">
                 <label>Location</label>
